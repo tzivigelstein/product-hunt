@@ -5,11 +5,20 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "export": "next export"
   },
   "dependencies": {
+    "@emotion/babel-preset-css-prop": "^10.0.27",
+    "@emotion/core": "^10.0.35",
+    "@emotion/styled": "^10.0.27",
+    "babel-plugin-emotion": "^10.0.33",
+    "date-fns": "^2.16.1",
+    "firebase": "^7.21.0",
+    "firebase-admin": "^9.2.0",
     "next": "9.5.3",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "react-firebase-file-uploader": "^2.4.3"
   }
 }

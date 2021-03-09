@@ -3,8 +3,8 @@ import Layout from '../components/Layout/Layout'
 import ProductDetails from '../components/Layout/ProductDetails'
 import useOrder from '../Hooks/useOrder'
 
-const Home = () => {
-  const { products } = useOrder('date')
+const Popular = () => {
+  const { products } = useOrder('votes')
   return (
     <Layout>
       <div className="listado-productos">
@@ -20,4 +20,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Popular
