@@ -3,9 +3,9 @@ import styled from '@emotion/styled'
 export const Form = styled.form`
   max-width: 600px;
   width: 95%;
-  margin: 5rem auto 0 auto;
+  margin: 5rem auto 5rem auto;
 
-  fieldset {
+  div {
     margin: 2rem 0;
     border: 1px solid #e1e1e1;
     font-size: 2rem;
@@ -16,16 +16,19 @@ export const Form = styled.form`
 export const Field = styled.div`
   margin-bottom: 2rem;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+
   label {
-    flex: 0 0 150px;
+    margin-right: 0.7rem;
     font-size: 1.8rem;
   }
 
   input,
   textarea {
-    flex: 1;
+    width: 100%;
     padding: 1rem;
+    box-sizing: border-box;
   }
 
   textarea {

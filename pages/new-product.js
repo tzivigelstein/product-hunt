@@ -1,12 +1,12 @@
-import { Fragment, useState, useContext } from 'react'
+import { useState, useContext } from 'react'
 import Layout from '../components/Layout/Layout'
 import useValidation from '../Hooks/useValidation'
 import productValidation from '../validation/productValidation'
-import Router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import FileUploader from 'react-firebase-file-uploader'
 import { Form, Field, InputSubmit, Error } from '../components/UI/Form'
 import { css } from '@emotion/core'
-import { FirebaseContext } from '../firebase'
+import { FirebaseContext } from '../firebase/index'
 import NotFound from '../components/Layout/404'
 
 const initialState = {
@@ -109,7 +109,7 @@ const NewProduct = () => {
               Nuevo producto
             </h1>
             <Form onSubmit={handleSubmit} noValidate>
-              <fieldset>
+              <div>
                 <legend>Información general</legend>
                 <Field>
                   <label htmlFor="name">Nombre</label>
@@ -170,9 +170,9 @@ const NewProduct = () => {
                 </Field>
 
                 {errors.url && <Error>{errors.url}</Error>}
-              </fieldset>
+              </div>
 
-              <fieldset>
+              <div>
                 <legend>Sobre tu producto</legend>
                 <Field>
                   <label htmlFor="description">Descripción</label>
@@ -187,7 +187,7 @@ const NewProduct = () => {
                 </Field>
 
                 {errors.description && <Error>{errors.description}</Error>}
-              </fieldset>
+              </div>
               {error && <Error>{error}</Error>}
 
               <InputSubmit type="submit" value="Crear" />

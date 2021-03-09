@@ -14,20 +14,24 @@ const Layout = props => {
             --gris3: #e1e1e1;
             --naranja: #da552f;
           }
-          html {
-            font-size: 62.5%;
-            box-sizing: border-box;
-          }
+
           *,
           *:before,
           *after {
+            box-sizing: border-box;
+          }
+
+          html {
+            font-size: 62.5%;
             box-sizing: inherit;
           }
+
           body {
             font-family: 'PT Sans', sans-serif;
             font-size: 1.6rem;
             line-height: 1.5;
           }
+
           h1,
           h2,
           h3 {
@@ -39,24 +43,28 @@ const Layout = props => {
             font-family: 'Roboto Slab', serif;
             font-weight: 700;
           }
+
           h3 {
             font-family: 'PT Sans', sans-serif;
           }
+
           ul {
             list-style: none;
             margin: 0;
             padding: 0;
           }
+
           a {
             text-decoration: none;
           }
+
           img {
             max-width: 100%;
           }
         `}
       />
       <Head>
-        <title>ProductHunt</title>
+        <title>Product Hunt - The best new products in tech.</title>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
