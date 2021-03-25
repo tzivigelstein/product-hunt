@@ -88,7 +88,7 @@ const Header = () => {
                 <Button bgColor="true">Iniciar sesión</Button>
               </Link>
               <Link href="/signup">
-                <Button>Registrarse</Button>
+                <Button style={{color: "#222", borderColor: "#222"}}>Registrarse</Button>
               </Link>
             </>
           )}

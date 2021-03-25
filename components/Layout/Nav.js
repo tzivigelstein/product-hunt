@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import Link from 'next/link'
+import {useRouter} from 'next/router'
 import styled from '@emotion/styled'
 import FirebaseContext from '../../firebase/context'
 
@@ -17,19 +18,20 @@ const Navigation = styled.nav`
 `
 
 const Nav = () => {
+  const route = useRouter().route
   const { user } = useContext(FirebaseContext)
 
   return (
     <Navigation>
       <Link href="/">
-        <a href="/">Inicio</a>
+        <a style={route === "/" ? {color: "#da552f"}: {}}>Inicio</a>
       </Link>
       <Link href="/popular">
-        <a href="/">Populares</a>
+        <a style={route === "/popular" ? {color: "#da552f"}:{}}>Populares</a>
       </Link>
       {user ? (
         <Link href="/new-product">
-          <a href="/">Nuevo producto</a>
+          <a>Nuevo producto</a>
         </Link>
       ) : null}
     </Navigation>
