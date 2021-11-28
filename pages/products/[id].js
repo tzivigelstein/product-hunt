@@ -228,7 +228,7 @@ const Product = () => {
                       text-align: center;
                     `}
                   >
-                    {votes} Votos
+                    {`${votes} ${votes === 1 ? 'voto' : 'votos'}`}
                   </p>
                   {user && <Button onClick={handleVote}>Votar</Button>}
                 </div>
