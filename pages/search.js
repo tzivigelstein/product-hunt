@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
-import Layout from '../components/Layout/Layout'
-import { useRouter } from 'next/router'
-import useOrder from '../Hooks/useOrder'
-import ProductDetails from '../components/Layout/ProductDetails'
+import { useEffect, useState } from "react"
+import Layout from "../components/Layout/Layout"
+import { useRouter } from "next/router"
+import useOrder from "../hooks/useOrder"
+import ProductDetails from "../components/Layout/ProductDetails"
 
 const SearchPage = () => {
   const router = useRouter()
@@ -12,7 +12,7 @@ const SearchPage = () => {
     query: { q },
   } = router
 
-  const { products } = useOrder('date')
+  const { products } = useOrder("date")
 
   useEffect(() => {
     const search = q.toLowerCase()

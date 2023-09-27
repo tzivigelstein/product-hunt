@@ -1,35 +1,32 @@
-import { Fragment, useState } from 'react'
-import Layout from '../components/Layout/Layout'
-import useValidation from '../Hooks/useValidation'
-import signupValidation from '../validation/signupValidation'
-import Router from 'next/router'
-import { Form, Field, InputSubmit, Error } from '../components/UI/Form'
-import { css } from '@emotion/core'
-import firebase from '../firebase/index'
+import { Fragment, useState } from "react"
+import Layout from "../components/Layout/Layout"
+import useValidation from "../hooks/useValidation"
+import signupValidation from "../validation/signupValidation"
+import Router from "next/router"
+import { Form, Field, InputSubmit, Error } from "../components/UI/Form"
+import { css } from "@emotion/core"
+import firebase from "../firebase/index"
 
 const initialState = {
-  name: '',
-  password: '',
-  email: '',
+  name: "",
+  password: "",
+  email: "",
 }
 
 const Signup = () => {
-  const [error, setError] = useState('')
+  const [error, setError] = useState("")
 
-  const { values, errors, handleSubmit, handleChange, handleBlur } = useValidation(
-    initialState,
-    signupValidation,
-    signUp
-  )
+  const { values, errors, handleSubmit, handleChange, handleBlur } =
+    useValidation(initialState, signupValidation, signUp)
 
   const { name, password, email } = values
 
   async function signUp() {
     try {
       await firebase.signup(name, email, password)
-      Router.push('/')
+      Router.push("/")
     } catch (error) {
-      console.error('Hubo un error al crear el usuario', error.message)
+      console.error("Hubo un error al crear el usuario", error.message)
       setError(error.message)
     }
   }

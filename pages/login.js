@@ -1,30 +1,31 @@
-import { Fragment, useState } from 'react'
-import Layout from '../components/Layout/Layout'
-import useValidation from '../Hooks/useValidation'
-import loginValidation from '../validation/loginValidation'
-import Router from 'next/router'
-import { Form, Field, InputSubmit, Error } from '../components/UI/Form'
-import { css } from '@emotion/core'
-import firebase from '../firebase/index'
+import { Fragment, useState } from "react"
+import Layout from "../components/Layout/Layout"
+import useValidation from "../hooks/useValidation"
+import loginValidation from "../validation/loginValidation"
+import Router from "next/router"
+import { Form, Field, InputSubmit, Error } from "../components/UI/Form"
+import { css } from "@emotion/core"
+import firebase from "../firebase/index"
 
 const initialState = {
-  password: '',
-  email: '',
+  password: "",
+  email: "",
 }
 
 const Login = () => {
-  const [error, setError] = useState('')
+  const [error, setError] = useState("")
 
-  const { values, errors, handleSubmit, handleChange, handleBlur } = useValidation(initialState, loginValidation, logIn)
+  const { values, errors, handleSubmit, handleChange, handleBlur } =
+    useValidation(initialState, loginValidation, logIn)
 
   const { password, email } = values
 
   async function logIn() {
     try {
       await firebase.login(email, password)
-      Router.push('/')
+      Router.push("/")
     } catch (error) {
-      console.error('Hubo un error al autenticar el usuario', error.message)
+      console.error("Hubo un error al autenticar el usuario", error.message)
       setError(error.message)
     }
   }

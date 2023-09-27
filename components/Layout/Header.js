@@ -1,11 +1,11 @@
-import { useContext } from 'react'
-import Search from '../UI/Search'
-import Nav from './Nav'
-import Link from 'next/link'
-import Button from '../UI/Button'
-import styled from '@emotion/styled'
-import { css } from '@emotion/core'
-import FirebaseContext from '../../firebase/context'
+import {useContext} from "react"
+import Search from "../UI/Search"
+import Nav from "./Nav"
+import Link from "next/link"
+import Button from "../UI/Button"
+import styled from "@emotion/styled"
+import {css} from "@emotion/core"
+import FirebaseContext from "../../firebase/context"
 
 const HeaderContainer = styled.div`
   max-width: 1200px;
@@ -22,7 +22,6 @@ const Logo = styled.a`
   font-size: 4rem;
   line-height: 0;
   font-weight: 700;
-  font-family: 'Roboto Slab', serif;
   margin-right: 2rem;
 `
 
@@ -37,7 +36,7 @@ const NavContainer = styled.div`
 `
 
 const Header = () => {
-  const { user, firebase } = useContext(FirebaseContext)
+  const {user, firebase} = useContext(FirebaseContext)
 
   return (
     <header

@@ -1,10 +1,10 @@
-import React from 'react'
-import Layout from '../components/Layout/Layout'
-import ProductDetails from '../components/Layout/ProductDetails'
-import useOrder from '../Hooks/useOrder'
+import React from "react"
+import Layout from "../components/Layout/Layout"
+import ProductDetails from "../components/Layout/ProductDetails"
+import useOrder from "../hooks/useOrder"
 
 const Popular = () => {
-  const { products } = useOrder('votes')
+  const { products } = useOrder("votes")
   return (
     <Layout>
       <div className="listado-productos">
