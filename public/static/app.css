@@ -26,9 +26,13 @@
   padding: 1rem;
 }
 
-
 .heading {
   font-size: 24px;
+  margin: 0;
+  padding: 0;
+}
+
+.product_list {
   margin: 0;
   padding: 0;
 }

@@ -2,8 +2,8 @@
   --dark-gray: #3d3d3d;
   --medium-gray: #6f6f6f;
   --light-gray: #e1e1e1;
-  --orange: #da552f;
-  --light-orange: rgba(232, 113, 80, .2);
+  --orange: #ff6154;
+  --light-orange: rgba(232, 113, 80, 0.2);
 }
 
 * {
