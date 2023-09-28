@@ -14,8 +14,6 @@ const useOrder = order => {
         .onSnapshot(handleSnapshot)
     }
     getProducts()
-
-    console.log("executing")
   }, [currentOrder])
 
   function handleSnapshot(snapshot) {
