@@ -9,16 +9,37 @@ const Product = styled.li`
   padding: 1rem;
   display: flex;
   justify-content: space-between;
-  border-radius: 4px;
   align-items: center;
+  background-color: #fff;
+  position: relative;
+
+  &::before {
+    content: "";
+    border-radius: 8px;
+    transition: 600ms ease-out opacity;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    width: 100%;
+    height: 80%;
+    opacity: 0;
+    background: linear-gradient(12deg, #fff 60%, var(--light-orange));
+    z-index 1;
+  }
 
   @media (max-width: 480px) {
-    padding: 2rem;
+    &::before {
+      all: unset;
+    }
+  }
+
+  &:hover::before {
+    opacity: 1;
   }
 
   &:hover {
     cursor: pointer;
-    background: linear-gradient(12deg, #fff 60%, var(--light-orange));
   }
 `
 
@@ -26,13 +47,26 @@ const ProductDescription = styled.div`
   flex: 0 1 600px;
   display: grid;
   grid-template-columns: 1fr 3fr;
-  column-gap: 2rem;
+  gap: 2rem;
+  z-index: 2;
+
+  @media (max-width: 480px) {
+    gap: 1rem;
+  }
+`
+
+const ProductDetails = styled.div`
+  padding: 0.5rem 0;
 `
 
 const DescriptionText = styled.p`
   font-size: 1rem;
   margin: 0;
   color: #667190;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
 `
 
 const Title = styled.p`
@@ -40,6 +74,10 @@ const Title = styled.p`
   font-weight: bold;
   margin: 0 0 0.5rem 0;
   color: #21293c;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
 `
 
 const ImageContainer = styled.div`
@@ -52,12 +90,17 @@ const Image = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+  aspect-ratio: 1.06 / 1;
 `
 
 const TagsAndComments = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+
+  @media (max-width: 480px) {
+    display: none;
+  }
 `
 
 const Tags = styled.p`
@@ -84,17 +127,23 @@ const Votes = styled.div`
   border: 1px solid #e1e1e1;
   padding: 1rem 0.5rem;
   border-radius: 4px;
+  z-index: 2;
 
   p {
     transition: 800ms steps(28) color;
     color: ${props => (props.upvoted ? "var(--orange)" : "initial")};
     margin: 0;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 600;
   }
 
   &:hover {
     cursor: pointer;
+  }
+
+  @media (max-width: 480px) {
+    border: none;
+    border-left: 1px solid #ccc;
   }
 `
 
@@ -127,7 +176,7 @@ export default function ProductDetail({ product }) {
           <ImageContainer>
             <Image src={imageurl} />
           </ImageContainer>
-          <div>
+          <ProductDetails>
             <Title>{name}</Title>
             <DescriptionText>{description}</DescriptionText>
             <TagsAndComments>
@@ -144,7 +193,7 @@ export default function ProductDetail({ product }) {
                 {formatTimeToNow(new Date(date), { locale: enUS })} ago
               </TimeAgo>
             </TagsAndComments>
-          </div>
+          </ProductDetails>
         </ProductDescription>
         <Votes onClick={handleUpvote} upvoted={upvoted}>
           <UpVote upvoted={upvoted} />
