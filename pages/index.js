@@ -38,9 +38,11 @@ export default function Home() {
               <option value="popular">Popular</option>
             </select>
           </div>
+          <ul className="product_list">
           {products.map(product => (
             <ProductDetail key={product.id} product={product} />
           ))}
+          </ul>
         </div>
       </div>
     </Layout>
