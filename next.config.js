@@ -8,6 +8,7 @@ module.exports = {
       "@components": path.join(__dirname, "components"),
       "@utils": path.join(__dirname, "utils"),
       "@hooks": path.join(__dirname, "hooks"),
+      "@styles": path.join(__dirname, "styles"),
     }
 
     return config
