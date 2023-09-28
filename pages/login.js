@@ -3,7 +3,7 @@ import Layout from "../components/Layout/Layout"
 import useValidation from "../hooks/useValidation"
 import loginValidation from "../validation/loginValidation"
 import Router from "next/router"
-import { Form, Field, InputSubmit, Error } from "../components/UI/Form"
+import { Form, Field, InputSubmit, Error } from "@components/UI/Form"
 import { css } from "@emotion/core"
 import firebase from "../firebase/index"
 

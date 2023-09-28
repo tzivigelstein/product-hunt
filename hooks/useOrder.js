@@ -1,16 +1,22 @@
-import { useState, useEffect, useContext } from 'react'
-import { FirebaseContext } from '../firebase/index'
+import { useState, useEffect, useContext } from "react"
+import { FirebaseContext } from "../firebase/index"
 
 const useOrder = order => {
+  const [currentOrder, setCurrentOrder] = useState(order)
   const [products, setProducts] = useState([])
   const { firebase } = useContext(FirebaseContext)
 
   useEffect(() => {
     const getProducts = () => {
-      firebase.db.collection('products').orderBy(order, 'desc').onSnapshot(handleSnapshot)
+      firebase.db
+        .collection("products")
+        .orderBy(currentOrder, "desc")
+        .onSnapshot(handleSnapshot)
     }
     getProducts()
-  }, [])
+
+    console.log("executing")
+  }, [currentOrder])
 
   function handleSnapshot(snapshot) {
     const products = snapshot.docs.map(doc => {
@@ -21,7 +27,8 @@ const useOrder = order => {
     })
     setProducts(products)
   }
-  return { products }
+
+  return { products, setOrder: setCurrentOrder }
 }
 
 export default useOrder

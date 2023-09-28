@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import Layout from "../components/Layout/Layout"
 import { useRouter } from "next/router"
 import useOrder from "../hooks/useOrder"
-import ProductDetails from "../components/Layout/ProductDetails"
+import ProductDetail from "../components/Layout/ProductDetail"
 
 const SearchPage = () => {
   const router = useRouter()
@@ -33,7 +33,7 @@ const SearchPage = () => {
           <h3>Resultados por: {q}</h3>
           <div className="bg-white">
             {search.map(filt => (
-              <ProductDetails key={filt.id} product={filt} />
+              <ProductDetail key={filt.id} product={filt} />
             ))}
           </div>
         </div>

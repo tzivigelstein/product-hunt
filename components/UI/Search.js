@@ -1,21 +1,26 @@
-import { useState } from 'react'
-import styled from '@emotion/styled'
-import { css } from '@emotion/core'
-import Router from 'next/router'
-import FindIcon from './FindIcon'
+import { useState } from "react"
+import Router from "next/router"
+
+import styled from "@emotion/styled"
+import { css } from "@emotion/core"
+
+import SearchIcon from "@components/UI/SearchIcon"
 
 const InputText = styled.input`
-  border: 1px solid var(--gris3);
-  padding: 1rem;
-  min-width: 300px;
+  border: 1px solid #ccc;
+  padding: .6rem;
+  border-radius: 4px;
+  max-width: 220px;
   position: relative;
+  padding-left: 2.5rem;
+  font-size: 15px;
 `
 
 const InputSubmit = styled.button`
   height: 3rem;
   width: 3rem;
   position: absolute;
-  right: 0.7rem;
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
   background-color: transparent;
@@ -31,15 +36,14 @@ const InputSubmit = styled.button`
 `
 
 const Search = () => {
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
 
   const searchProduct = e => {
     e.preventDefault()
-    if (search.trim() === '') return
+    if (search.trim() === "") return
 
-    //Redireccionar al user
     Router.push({
-      pathname: '/search',
+      pathname: "/search",
       query: { q: search },
     })
   }
@@ -51,9 +55,13 @@ const Search = () => {
       `}
       onSubmit={searchProduct}
     >
-      <InputText type="text" placeholder="Buscar productos" onChange={e => setSearch(e.target.value)} />
+      <InputText
+        type="text"
+        placeholder="Search"
+        onChange={e => setSearch(e.target.value)}
+      />
       <InputSubmit type="submit">
-        <FindIcon />
+        <SearchIcon />
       </InputSubmit>
     </form>
   )
