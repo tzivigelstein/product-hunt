@@ -1,34 +1,245 @@
 import { useContext, useEffect, useState } from "react"
 import { useRouter } from "next/router"
-import { css } from "@emotion/core"
 import styled from "@emotion/styled"
-
-import { enUS } from "date-fns/locale"
-import { default as formatTimeToNow } from "date-fns/formatDistanceToNow"
 
 import { FirebaseContext } from "../../firebase/index"
 
-import { Field, InputSubmit } from "@components/UI/Form"
 import NotFound from "@components/Layout/404"
 import Layout from "@components/Layout/Layout"
-import Button from "@components/UI/Button"
+import UserIcon from "@components/UI/UserIcon"
 
 const ProductContainer = styled.div``
 
-const ProductOwner = styled.p`
-  color: var(--orange);
+const Article = styled.article`
+  padding: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-bottom: 500px;
+`
+
+const ImageAndPosition = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const ImageContainer = styled.div`
+  width: 80px;
+  border-radius: 4px;
+  overflow: hidden;
+  aspect-ratio: 1.04 / 1;
+`
+
+const Position = styled.span`
+  font-size: 1rem;
+  color: rgb(125, 138, 176);
+  &:first-letter {
+    font-size: 2.5rem;
+    font-weight: 600;
+  }
+`
+
+const Image = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`
+
+const TitleSubtitleAndLinks = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const TitleAndSubtitle = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const Title = styled.h1`
+  font-size: 24px;
+  margin: 1rem 0 0 0;
+  color: #21293c;
+`
+
+const Subtitle = styled.h2`
+  font-size: 24px;
+  font-weight: 500;
+  color: #4b587c;
+`
+
+const Links = styled.div`
+  display: flex;
+  gap: 1rem;
+  flex: 0.8;
+`
+
+const Visit = styled.a`
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 4px;
+
+  &:hover {
+    border-color: var(--orange);
+  }
+`
+
+const Upvote = styled.button`
+  background-color: ${props => (props.upvoted ? "#fff" : "var(--orange)")};
+  color: ${props => (props.upvoted ? "black" : "white")};
+  border: ${props => (props.upvoted ? "1px solid var(--orange)" : "none")};
   text-transform: uppercase;
-  font-weight: bold;
-  display: inline-block;
-  text-align: center;
+  display: flex;
+  padding: 1rem 2rem 1rem 1rem;
+  border-radius: 4px;
+  width: 100%;
+  justify-content: center;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 200ms ease-out background-color;
+
+  &:hover {
+    background-color: ${props => (props.upvoted ? "white" : "#ff4582")};
+  }
+`
+
+const UpvoteIcon = styled.div`
+  background-image: url(https://ph-static.imgix.net/upvote-burst-2022.png?format=auto&auto=compress);
+  aspect-ratio: 1 / 0.5777778;
+  width: 32px;
+  background-position: ${props => (props.upvoted ? "100%" : "0%")};
+  background-repeat: no-repeat;
+  background-size: 2900%;
+  transition: 800ms steps(28) background-position;
+  filter: brightness(0) saturate(100%)
+    ${props =>
+      props.upvoted
+        ? "filter: invert(70%) sepia(54%) saturate(5290%) hue-rotate(323deg) brightness(95%) contrast(113%)"
+        : "invert(100%) sepia(0%) saturate(1190%) hue-rotate(197deg) brightness(119%) contrast(100%)"};
+  gap: 1ch;
+`
+
+const Description = styled.p`
+  font-size: 16px;
+  line-height: 24px;
+  color: #21293c;
+`
+
+const Launched = styled.p`
+  color: #4b587c;
+  font-size: 16px;
+  line-height: 24px;
+`
+
+const Form = styled.form`
+  display: grid;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  grid-template-columns: auto 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 2rem;
+`
+
+const UserIconContainer = styled.div`
+  background-color: var(--orange);
+  display: flex;
+  width: max-content;
+  border-radius: 100%;
+  padding: 0.3rem;
+  height: max-content;
+  margin-top: 7px;
+
+  svg {
+    width: 28px;
+    height: 28px;
+  }
+`
+
+const TextArea = styled.textarea`
+  box-sizing: border-box;
+  padding: 1rem;
+  width: 100%;
+  height: ${props => props.height}px;
+  grid-column-end: 4;
+  grid-column-start: 2;
+  resize: none;
+  border: none;
+  outline: none;
+`
+
+const Submit = styled.button`
+  height: max-content;
+  padding: 8px 16px;
+  background-color: var(--orange);
+  border: none;
+  grid-row: 2;
+  grid-column-start: 3;
+  grid-column-end: 4;
+  width: max-content;
+  margin-left: auto;
+  cursor: pointer;
+  border-radius: 4px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+
+  &:hover {
+    background-color: #ff4582;
+  }
+`
+
+const Comments = styled.div``
+
+const CommentUserContainer = styled.div`
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+`
+
+const CommentUser = styled.span`
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 24px;
+`
+
+const ProductOwner = styled.p`
+  display: inline;
+  border-radius: 999px;
+  color: #21293c;
+  background-color: rgba(22, 199, 154, 0.25);
+  margin-left: 8px;
+  padding: 4px 8px;
+  font-weight: 600;
+  font-size: 11px;
 `
 
 const Product = () => {
   //State del componente
+  const [minHeight] = useState(64) // Minimum height in pixels
+  const [maxHeight] = useState(200) // Maximum height in pixels
+  const [height, setHeight] = useState(minHeight)
+
   const [product, setProduct] = useState({})
   const [error, setError] = useState(false)
-  const [comment, setComment] = useState({})
+  const [comment, setComment] = useState("")
   const [queryDB, setQueryDB] = useState(true)
+
+  //Funcion que ejecuta los comentarios
+  const handleChange = e => {
+    const { scrollHeight } = e.target
+    const newHeight = Math.min(maxHeight, Math.max(minHeight, scrollHeight))
+
+    if (e.target.value === "") {
+      setHeight(minHeight)
+    } else {
+      setHeight(newHeight)
+    }
+
+    setComment(e.target.value)
+  }
 
   //Firebase context
   const { user, firebase } = useContext(FirebaseContext)
@@ -63,32 +274,37 @@ const Product = () => {
     date,
     description,
     company,
+    creator,
     url,
     imageurl,
-    creator,
     votes,
     comments,
     hasVoted,
   } = product
 
+  const position = 1
+
   //Funcion que ejecuta los votos
   const handleVote = () => {
     if (!user) return router.push("/login")
 
-    //Obtener y sumar votos
-    const totalVotes = votes + 1
+    let totalVotes = votes
+    let usersHaveVoted = [...hasVoted]
 
-    //Verificar si ya se ha votado con el usuario
-    if (hasVoted.includes(user.uid)) return
-
-    //Guardar el id del usuario que votó
-    const usersHasVoted = [...hasVoted, user.uid]
+    if (hasVoted.includes(user.uid)) {
+      //Obtener y sumar votos
+      totalVotes = votes - 1
+      usersHaveVoted = usersHaveVoted.filter(uid => uid !== user.uid)
+    } else {
+      totalVotes = votes + 1
+      usersHaveVoted = [...usersHaveVoted, user.uid]
+    }
 
     //Actualizar BD
     firebase.db
       .collection("products")
       .doc(id)
-      .update({ votes: totalVotes, hasVoted: usersHasVoted })
+      .update({ votes: totalVotes, hasVoted: usersHaveVoted })
 
     //Actualizar State
     setProduct({
@@ -97,14 +313,6 @@ const Product = () => {
     })
 
     setQueryDB(true)
-  }
-
-  //Funcion que ejecuta los comentarios
-  const handleComments = e => {
-    setComment({
-      ...comment,
-      [e.target.name]: e.target.value,
-    })
   }
 
   //Identificar la autoria del comentario
@@ -158,106 +366,88 @@ const Product = () => {
     }
   }
 
+  if (error)
+    return <NotFound text="The product you are looking for doesn't exist" />
+
   return (
     <Layout>
-      {error ? (
-        <NotFound text="The product you are looking for doesn't exist" />
-      ) : (
-        <div className="contenedor">
-          <h1
-            css={css`
-              text-align: center;
-              margin-top: 5rem;
-            `}
-          >
-            {name}
-          </h1>
-          <ProductContainer>
-            <div>
-              <p>{formatTimeToNow(new Date(date), { locale: enUS })}</p>
-              <p>
-                Por {creator.name} de {company}
-              </p>
-              <div style={{ width: 80 }}>
-                <img src={imageurl} style={{ width: "100%" }} />
-              </div>
-              <p>{description}</p>
-              {user && (
-                <>
-                  <h2>Discussion</h2>
-                  <form onSubmit={onSubmit}>
-                    <Field>
-                      <input
-                        type="text"
-                        name="msg"
-                        value={comment.msg}
-                        onChange={handleComments}
-                      />
-                      <InputSubmit type="submit" value="Comment" />
-                    </Field>
-                  </form>
-                </>
-              )}
-              <h2
-                css={css`
-                  margin: 2rem 0;
-                `}
-              >
-                Discussion
-              </h2>
-              {comments.length === 0 ? (
-                "Be the first to comment!"
-              ) : (
+      <Article>
+        <ImageAndPosition>
+          <ImageContainer>
+            <Image src={imageurl} />
+          </ImageContainer>
+          <Position>#{position}</Position>
+        </ImageAndPosition>
+
+        <TitleSubtitleAndLinks>
+          <TitleAndSubtitle>
+            <Title>{name}</Title>
+            <Subtitle>{description}</Subtitle>
+          </TitleAndSubtitle>
+          <Links>
+            <Visit target="_blank" bgColor="true" href={url}>
+              Visit
+            </Visit>
+            <Upvote onClick={handleVote} upvoted={hasVoted.includes(user.uid)}>
+              <UpvoteIcon upvoted={hasVoted.includes(user.uid)} />
+              {user &&
+                (hasVoted.includes(user.uid) ? "Upvoted" : "Upvote")}{" "}
+              {votes}
+            </Upvote>
+          </Links>
+        </TitleSubtitleAndLinks>
+        <ProductContainer>
+          <Description>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit
+            repellat voluptates eius vero fugit inventore nulla, iure delectus
+            unde, in expedita quam magnam, libero id sed officia autem ea
+            aliquid praesentium dolores saepe. Vel accusantium, quisquam neque
+            magnam mollitia quas! Sint nemo, nulla alias, quas hic culpa quos
+            veniam tempora fugiat eos ratione. Voluptatem, temporibus quasi, eos
+            saepe aliquam provident natus at ad perferendis accusamus id, ut rem
+            excepturi consequatur ipsam mollitia esse voluptas ratione vero
+            maxime quisquam consequuntur nulla.
+          </Description>
+          <Launched>Launched by {company}</Launched>
+          <div>
+            {user && (
+              <Form onSubmit={onSubmit}>
+                <UserIconContainer>
+                  <UserIcon />
+                </UserIconContainer>
+                <TextArea
+                  placeholder="What do you think?"
+                  height={height}
+                  value={comment}
+                  onChange={handleChange}
+                />
+                <Submit type="submit">Comment</Submit>
+              </Form>
+            )}
+            {comments.length === 0 && "Be the first to comment!"}
+            <Comments>
+              {comments.length > 0 && (
                 <ul>
                   {comments.map((comment, i) => (
-                    <li
-                      key={`${comment.userId}-${i}`}
-                      css={css`
-                        border: 1px solid #e1e1e1;
-                        padding: 2rem;
-                      `}
-                    >
-                      <span
-                        css={css`
-                          font-weight: bold;
-                        `}
-                      >
-                        {comment.userName}
-                      </span>
+                    <li key={`${comment.userId}-${i}`}>
+                      <CommentUserContainer>
+                        <UserIconContainer>
+                          <UserIcon />
+                        </UserIconContainer>
+                        <CommentUser>{comment.userName}</CommentUser>
+                        {isCreator(comment.userId) && (
+                          <ProductOwner>Maker</ProductOwner>
+                        )}
+                      </CommentUserContainer>
                       <p>{comment.msg}</p>
-                      {isCreator(comment.userId) && (
-                        <ProductOwner>Creador</ProductOwner>
-                      )}
                     </li>
                   ))}
                 </ul>
               )}
-            </div>
-            <aside>
-              <Button target="_blank" bgColor="true" href={url}>
-                Visit
-              </Button>
-              <div
-                css={css`
-                  margin-top: 5rem;
-                `}
-              >
-                <p
-                  css={css`
-                    text-align: center;
-                  `}
-                >
-                  {`${votes} ${votes === 1 ? "voto" : "votos"}`}
-                </p>
-                {user && <Button onClick={handleVote}>Votar</Button>}
-              </div>
-            </aside>
-          </ProductContainer>
-          {hasPermits() && (
-            <Button onClick={deleteProduct}>Eliminar producto</Button>
-          )}
-        </div>
-      )}
+            </Comments>
+          </div>
+        </ProductContainer>
+      </Article>
     </Layout>
   )
 }
