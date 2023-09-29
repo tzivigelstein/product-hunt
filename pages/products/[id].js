@@ -388,10 +388,10 @@ const Product = () => {
             <Visit target="_blank" bgColor="true" href={url}>
               Visit
             </Visit>
-            <Upvote onClick={handleVote} upvoted={hasVoted.includes(user.uid)}>
-              <UpvoteIcon upvoted={hasVoted.includes(user.uid)} />
+            <Upvote onClick={handleVote} upvoted={hasVoted.includes(user?.uid)}>
+              <UpvoteIcon upvoted={hasVoted.includes(user?.uid)} />
               {user &&
-                (hasVoted.includes(user.uid) ? "Upvoted" : "Upvote")}{" "}
+                (hasVoted.includes(user?.uid) ? "Upvoted" : "Upvote")}{" "}
               {votes}
             </Upvote>
           </Links>
