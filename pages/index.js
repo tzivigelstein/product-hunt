@@ -1,12 +1,14 @@
-import React from 'react'
-import Layout from '../components/Layout/Layout'
-import ProductDetails from '../components/Layout/ProductDetails'
-import useOrder from '../Hooks/useOrder'
+import React from "react"
+import Layout from "../components/Layout/Layout"
+import ProductDetails from "../components/Layout/ProductDetails"
+import useOrder from "../Hooks/useOrder"
+import HomeMessage from "../components/UI/HomeMessage"
 
 const Home = () => {
-  const { products } = useOrder('date')
+  const {products} = useOrder("date")
   return (
     <Layout>
+      <HomeMessage />
       <div className="listado-productos">
         <div className="contenedor">
           <div className="bg-white">

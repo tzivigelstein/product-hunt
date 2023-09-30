@@ -1,0 +1,33 @@
+.container {
+  background-color: #f5f8ff;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 2rem;
+  margin: 1rem auto;
+  width: max-content;
+}
+
+.title {
+  padding: 0;
+  margin: 0;
+  font-size: 24px;
+  color: #21293c;
+}
+
+.subtitle {
+  padding: 0;
+  margin: 0;
+  color: #4b587c;
+}
+
+.link {
+  background-color: var(--naranja);
+  color: white;
+  border-radius: 4px;
+  padding: 8px 16px;
+  width: max-content;
+  margin-top: 1.5rem;
+  margin-left: auto;
+}
