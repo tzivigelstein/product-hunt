@@ -204,6 +204,21 @@ const NewProduct = () => {
                 </Field>
 
                 {errors.tags && <Error>{errors.tags}</Error>}
+
+                <Field>
+                  <label htmlFor="subtitle">Subtitle</label>
+                  <input
+                    id="subtitle"
+                    type="text"
+                    placeholder="Subtitle"
+                    name="subtitle"
+                    value={subtitle}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Field>
+
+                {errors.subtitle && <Error>{errors.subtitle}</Error>}
               </div>
               {error && <Error>{error}</Error>}
 
