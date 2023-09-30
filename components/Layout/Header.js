@@ -63,18 +63,9 @@ const Header = () => {
         `}
       >
         {user && (
-          <>
-            <p
-              css={css`
-                margin-right: 2rem;
-              `}
-            >
-              Bienvenido, {user.displayName}
-            </p>
-            <Button bgColor="true" onClick={() => firebase.signout()}>
-              Cerrar sesión
-            </Button>
-          </>
+          <Button bgColor="true" onClick={() => firebase.signout()}>
+            Logout
+          </Button>
         )}
         {!user && (
           <Link href="/login">
