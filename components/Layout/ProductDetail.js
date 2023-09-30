@@ -1,9 +1,12 @@
-import { useState } from "react"
+import { useState, useEffect, useContext } from "react"
+import { useRouter } from "next/router"
 import Link from "next/link"
 
 import styled from "@emotion/styled"
 import { default as formatTimeToNow } from "date-fns/formatDistanceToNow"
 import { enUS } from "date-fns/locale"
+
+import { FirebaseContext } from "../../firebase/index"
 
 const Product = styled.li`
   padding: 1rem;
@@ -159,15 +162,54 @@ const UpVote = styled.div`
 `
 
 export default function ProductDetail({ product }) {
-  const { id, name, date, description, imageurl, votes, tags, comments } =
-    product
+  const {
+    id,
+    name,
+    subtitle,
+    date,
+    description,
+    imageurl,
+    votes,
+    tags,
+    comments,
+    hasVoted,
+  } = product
 
   const [upvoted, setUpvoted] = useState(false)
 
-  const handleUpvote = event => {
-    event.stopPropagation()
+  const router = useRouter()
 
-    setUpvoted(prev => !prev)
+  const { user, firebase } = useContext(FirebaseContext)
+
+  useEffect(() => {
+    if (user) {
+      setUpvoted(hasVoted.includes(user.uid))
+    }
+  }, [])
+
+  function handleVote(e) {
+    e.stopPropagation()
+
+    if (!user) return router.push("/login")
+
+    let totalVotes = votes
+    let usersHaveVoted = [...hasVoted]
+
+    if (hasVoted.includes(user.uid)) {
+      totalVotes = votes - 1
+      usersHaveVoted = usersHaveVoted.filter(uid => uid !== user.uid)
+    } else {
+      totalVotes = votes + 1
+      usersHaveVoted = [...usersHaveVoted, user.uid]
+    }
+
+    setUpvoted(usersHaveVoted.includes(user.uid))
+
+    //Actualizar BD
+    firebase.db
+      .collection("products")
+      .doc(id)
+      .update({ votes: totalVotes, hasVoted: usersHaveVoted })
   }
 
   return (
@@ -179,7 +221,7 @@ export default function ProductDetail({ product }) {
           </ImageContainer>
           <ProductDetails>
             <Title>{name}</Title>
-            <DescriptionText>{description}</DescriptionText>
+            <DescriptionText>{subtitle || description}</DescriptionText>
             <TagsAndComments>
               <Tags>{tags?.map(tag => `#${tag}`).join(" ")}</Tags>
               {tags && comments && <span>·</span>}
@@ -196,7 +238,7 @@ export default function ProductDetail({ product }) {
             </TagsAndComments>
           </ProductDetails>
         </ProductDescription>
-        <Votes onClick={handleUpvote} upvoted={upvoted}>
+        <Votes onClick={handleVote} upvoted={upvoted}>
           <UpVote upvoted={upvoted} />
           <p>{votes}</p>
         </Votes>
