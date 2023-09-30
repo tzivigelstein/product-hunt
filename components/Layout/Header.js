@@ -9,27 +9,29 @@ import FirebaseContext from "../../firebase/context"
 
 const HeaderContainer = styled.header`
   border-bottom: 1px solid var(--light-gray);
-  padding: 1rem 2rem;
+  padding: 1rem;
   background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+`
 
-  @media (min-width: 768px) {
-    display: flex;
-    justify-content: space-between;
+const LogoAndSearch = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+
+  @media (max-width: 480px) {
+    align-items: flex-start;
+    gap: 1rem;
   }
 `
 
-const ProductHuntLogo = styled.img`
+const ProductHuntLogo = styled.picture`
   height: 40px;
 `
 
 const NavContainer = styled.div`
   display: flex;
-  align-items: center;
-
-  @media (max-width: 480px) {
-    flex-direction: column;
-    align-items: center;
-  }
 `
 
 const Header = () => {
@@ -38,21 +40,19 @@ const Header = () => {
   return (
     <HeaderContainer>
       <NavContainer>
-        <div
-          css={css`
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-          `}
-        >
+        <LogoAndSearch>
           <Link href="/">
-            <ProductHuntLogo
-              src="/product-hunt-full.svg"
-              alt="Product Hunt Logo"
-            />
+            <ProductHuntLogo>
+              <source
+                role="presentation"
+                media="(max-width: 480px)"
+                srcSet="/product-hunt.svg"
+              />
+              <img alt="Product Hunt Logo" src="/product-hunt-full.svg" />
+            </ProductHuntLogo>
           </Link>
           <Search />
-        </div>
+        </LogoAndSearch>
         <Nav />
       </NavContainer>
       <div
@@ -62,7 +62,7 @@ const Header = () => {
           justify-content: space-around;
         `}
       >
-        {user ? (
+        {user && (
           <>
             <p
               css={css`
@@ -75,17 +75,11 @@ const Header = () => {
               Cerrar sesión
             </Button>
           </>
-        ) : (
-          <>
-            <Link href="/login">
-              <Button bgColor="true">Iniciar sesión</Button>
-            </Link>
-            <Link href="/signup">
-              <Button style={{ color: "#222", borderColor: "#222" }}>
-                Registrarse
-              </Button>
-            </Link>
-          </>
+        )}
+        {!user && (
+          <Link href="/login">
+            <Button bgColor="true">Sign in</Button>
+          </Link>
         )}
       </div>
     </HeaderContainer>

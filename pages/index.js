@@ -28,7 +28,7 @@ export default function Home() {
         <div className="container">
           <HomeMessage />
           <div className="heading_container">
-            <h1 className="heading">Is the next 🦄 here?</h1>
+            <h1 className="heading">Your next favorite thing 👇</h1>
             <select
               value={selectedValue}
               onChange={handleChange}

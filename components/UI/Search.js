@@ -2,13 +2,20 @@ import { useState } from "react"
 import Router from "next/router"
 
 import styled from "@emotion/styled"
-import { css } from "@emotion/core"
 
 import SearchIcon from "@components/UI/SearchIcon"
 
+const Form = styled.form`
+  position: relative;
+
+  @media (max-width: 480px) {
+    display: none;
+  }
+`
+
 const InputText = styled.input`
   border: 1px solid #ccc;
-  padding: .6rem;
+  padding: 0.6rem;
   border-radius: 4px;
   max-width: 220px;
   position: relative;
@@ -49,12 +56,7 @@ const Search = () => {
   }
 
   return (
-    <form
-      css={css`
-        position: relative;
-      `}
-      onSubmit={searchProduct}
-    >
+    <Form onSubmit={searchProduct}>
       <InputText
         type="text"
         placeholder="Search"
@@ -63,7 +65,7 @@ const Search = () => {
       <InputSubmit type="submit">
         <SearchIcon />
       </InputSubmit>
-    </form>
+    </Form>
   )
 }
 
