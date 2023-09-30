@@ -39,9 +39,9 @@ export default function Home() {
             </select>
           </div>
           <ul className="product_list">
-          {products.map(product => (
-            <ProductDetail key={product.id} product={product} />
-          ))}
+            {products.map(product => (
+              <ProductDetail key={product.id} product={product} />
+            ))}
           </ul>
         </div>
       </div>
