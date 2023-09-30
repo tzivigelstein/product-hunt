@@ -11,10 +11,12 @@ import NotFound from "../components/Layout/404"
 
 const initialState = {
   name: "",
+  subtitle: "",
   company: "",
   image: "",
   url: "",
   description: "",
+  tags: [],
 }
 
 const NewProduct = () => {
@@ -35,7 +37,7 @@ const NewProduct = () => {
   const { values, errors, handleSubmit, handleChange, handleBlur } =
     useValidation(initialState, productValidation, newProduct)
 
-  const { name, company, url, description } = values
+  const { name, company, url, description, tags, subtitle } = values
 
   async function newProduct() {
     //Si el user no esta autenticado
@@ -46,6 +48,8 @@ const NewProduct = () => {
     //Crear un nuevo producto como objeto
     const product = {
       name,
+      subtitle,
+      tags,
       company,
       url,
       imageurl,
@@ -93,9 +97,10 @@ const NewProduct = () => {
   return (
     <div>
       <Layout>
-        {!user ? (
+        {!user && (
           <NotFound text="Lo sentimos, no hemos encontrado tu usuario. Prueba iniciando sesión" />
-        ) : (
+        )}
+        {user && (
           <>
             <h1
               css={css`
@@ -184,6 +189,21 @@ const NewProduct = () => {
                 </Field>
 
                 {errors.description && <Error>{errors.description}</Error>}
+
+                <Field>
+                  <label htmlFor="tags">Tags</label>
+                  <input
+                    id="tags"
+                    type="text"
+                    placeholder="Tags"
+                    name="tags"
+                    value={tags}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Field>
+
+                {errors.tags && <Error>{errors.tags}</Error>}
               </div>
               {error && <Error>{error}</Error>}
 
