@@ -143,6 +143,7 @@ const Votes = styled.div`
 
   @media (max-width: 480px) {
     border: none;
+    border-radius: 0px;
     border-left: 1px solid #ccc;
   }
 `
