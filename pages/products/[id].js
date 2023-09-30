@@ -31,12 +31,10 @@ const ImageContainer = styled.div`
 `
 
 const Position = styled.span`
-  font-size: 1rem;
+  font-size: 2rem;
+  font-weight: 600;
+  text-transform: uppercase;
   color: rgb(125, 138, 176);
-  &:first-letter {
-    font-size: 2.5rem;
-    font-weight: 600;
-  }
 `
 
 const Image = styled.img`
@@ -49,6 +47,10 @@ const TitleSubtitleAndLinks = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 480px) {
+    display: grid;
+  }
 `
 
 const TitleAndSubtitle = styled.div`
@@ -90,13 +92,15 @@ const Upvote = styled.button`
   border: ${props => (props.upvoted ? "1px solid var(--orange)" : "none")};
   text-transform: uppercase;
   display: flex;
-  padding: 1rem 2rem 1rem 1rem;
+  padding: 1rem;
+  padding-right: 2rem;
   border-radius: 4px;
   width: 100%;
   justify-content: center;
   font-weight: 600;
   cursor: pointer;
   transition: 200ms ease-out background-color;
+  white-space: nowrap;
 
   &:hover {
     background-color: ${props => (props.upvoted ? "white" : "#ff4582")};
@@ -271,7 +275,7 @@ const Product = () => {
 
   const {
     name,
-    date,
+    subtitle,
     description,
     company,
     creator,
@@ -281,8 +285,6 @@ const Product = () => {
     comments,
     hasVoted,
   } = product
-
-  const position = 1
 
   //Funcion que ejecuta los votos
   const handleVote = () => {
@@ -376,13 +378,13 @@ const Product = () => {
           <ImageContainer>
             <Image src={imageurl} />
           </ImageContainer>
-          <Position>#{position}</Position>
+          <Position>New</Position>
         </ImageAndPosition>
 
         <TitleSubtitleAndLinks>
           <TitleAndSubtitle>
             <Title>{name}</Title>
-            <Subtitle>{description}</Subtitle>
+            <Subtitle>{subtitle || description}</Subtitle>
           </TitleAndSubtitle>
           <Links>
             <Visit target="_blank" bgColor="true" href={url}>
@@ -390,24 +392,12 @@ const Product = () => {
             </Visit>
             <Upvote onClick={handleVote} upvoted={hasVoted.includes(user?.uid)}>
               <UpvoteIcon upvoted={hasVoted.includes(user?.uid)} />
-              {user &&
-                (hasVoted.includes(user?.uid) ? "Upvoted" : "Upvote")}{" "}
-              {votes}
+              {hasVoted.includes(user?.uid) ? "Upvoted" : "Upvote"} {votes}
             </Upvote>
           </Links>
         </TitleSubtitleAndLinks>
         <ProductContainer>
-          <Description>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit
-            repellat voluptates eius vero fugit inventore nulla, iure delectus
-            unde, in expedita quam magnam, libero id sed officia autem ea
-            aliquid praesentium dolores saepe. Vel accusantium, quisquam neque
-            magnam mollitia quas! Sint nemo, nulla alias, quas hic culpa quos
-            veniam tempora fugiat eos ratione. Voluptatem, temporibus quasi, eos
-            saepe aliquam provident natus at ad perferendis accusamus id, ut rem
-            excepturi consequatur ipsam mollitia esse voluptas ratione vero
-            maxime quisquam consequuntur nulla.
-          </Description>
+          <Description>{description}</Description>
           <Launched>Launched by {company}</Launched>
           <div>
             {user && (
