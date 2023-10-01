@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import styled from "@emotion/styled"
+import Link from "next/link"
 
 import { FirebaseContext } from "../../firebase/index"
 
@@ -24,14 +25,15 @@ const ImageAndPosition = styled.div`
 `
 
 const ImageContainer = styled.div`
-  width: 80px;
+  width: 72px;
   border-radius: 4px;
   overflow: hidden;
   aspect-ratio: 1.04 / 1;
 `
 
 const Position = styled.span`
-  font-size: 2rem;
+  align-self: flex-start;
+  font-size: 1.5rem;
   font-weight: 600;
   text-transform: uppercase;
   color: rgb(125, 138, 176);
@@ -135,6 +137,17 @@ const Launched = styled.p`
   line-height: 24px;
 `
 
+const Category = styled.a`
+  background-color: #eef2ff;
+  border-radius: 999px;
+  color: #4b587c;
+  font-weight: 600;
+  padding: 4px 8px;
+  width: max-content;
+  margin: 0 0.2rem;
+  cursor: pointer;
+`
+
 const Form = styled.form`
   display: grid;
   gap: 0.5rem;
@@ -221,9 +234,8 @@ const ProductOwner = styled.p`
 `
 
 const Product = () => {
-  //State del componente
-  const [minHeight] = useState(64) // Minimum height in pixels
-  const [maxHeight] = useState(200) // Maximum height in pixels
+  const [minHeight] = useState(64)
+  const [maxHeight] = useState(200)
   const [height, setHeight] = useState(minHeight)
 
   const [product, setProduct] = useState({})
@@ -231,7 +243,6 @@ const Product = () => {
   const [comment, setComment] = useState("")
   const [queryDB, setQueryDB] = useState(true)
 
-  //Funcion que ejecuta los comentarios
   const handleChange = e => {
     const { scrollHeight } = e.target
     const newHeight = Math.min(maxHeight, Math.max(minHeight, scrollHeight))
@@ -245,10 +256,8 @@ const Product = () => {
     setComment(e.target.value)
   }
 
-  //Firebase context
   const { user, firebase } = useContext(FirebaseContext)
 
-  //Routing para obtener el id del producto
   const router = useRouter()
   const {
     query: { id },
@@ -284,6 +293,7 @@ const Product = () => {
     votes,
     comments,
     hasVoted,
+    tags,
   } = product
 
   //Funcion que ejecuta los votos
@@ -398,7 +408,15 @@ const Product = () => {
         </TitleSubtitleAndLinks>
         <ProductContainer>
           <Description>{description}</Description>
-          <Launched>Launched by {company}</Launched>
+          <Launched>
+            Launched in{" "}
+            {tags.map(tag => (
+              <Link href={`/category/${tag}`}>
+                <Category>{tag} </Category>
+              </Link>
+            ))}{" "}
+            by {company}
+          </Launched>
           <div>
             {user && (
               <Form onSubmit={onSubmit}>
