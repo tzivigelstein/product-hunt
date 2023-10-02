@@ -7,6 +7,13 @@
   padding: 2rem;
   margin: 1rem auto;
   width: max-content;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+  }
 }
 
 .title {
