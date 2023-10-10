@@ -8,6 +8,7 @@ import { FirebaseContext } from "../../firebase/index"
 import NotFound from "@components/Layout/404"
 import Layout from "@components/Layout/Layout"
 import UserIcon from "@components/UI/UserIcon"
+import formatDate from "@utils/formatDate"
 
 const ProductContainer = styled.div``
 
@@ -186,16 +187,30 @@ const TextArea = styled.textarea`
   outline: none;
 `
 
+const SubmitContainer = styled.div`
+  grid-row: 2;
+  grid-column-start: 3;
+  grid-column-end: 4;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+`
+
+const Help = styled.p`
+  color: #21293c;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 400;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+`
+
 const Submit = styled.button`
   height: max-content;
   padding: 8px 16px;
   background-color: var(--orange);
   border: none;
-  grid-row: 2;
-  grid-column-start: 3;
-  grid-column-end: 4;
   width: max-content;
-  margin-left: auto;
   cursor: pointer;
   border-radius: 4px;
   color: white;
@@ -210,6 +225,11 @@ const Submit = styled.button`
 
 const Comments = styled.div``
 
+const CommentsList = styled.ul`
+  display: grid;
+  gap: 2rem;
+`
+
 const CommentUserContainer = styled.div`
   display: flex;
   gap: 0.7rem;
@@ -222,6 +242,13 @@ const CommentUser = styled.span`
   line-height: 24px;
 `
 
+const CommentUsername = styled.span`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: #4b587c;
+`
+
 const ProductOwner = styled.p`
   display: inline;
   border-radius: 999px;
@@ -231,6 +258,23 @@ const ProductOwner = styled.p`
   padding: 4px 8px;
   font-weight: 600;
   font-size: 11px;
+`
+
+const LaunchTitle = styled.h4`
+  margin-bottom: 24px !important;
+  color: #21293c;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  margin-top: 4rem;
+`
+
+const LaunchSummary = styled.p`
+  margin-bottom: 32px !important;
+  color: #4b587c;
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 400;
 `
 
 const Product = () => {
@@ -294,6 +338,7 @@ const Product = () => {
     comments,
     hasVoted,
     tags,
+    date,
   } = product
 
   //Funcion que ejecuta los votos
@@ -338,13 +383,17 @@ const Product = () => {
     e.preventDefault()
     if (!user) return router.push("/login")
 
-    comment.userId = user.uid
-    comment.userName = user.displayName
+    if (comment.trim() === "") return
+    if (comment.length <= 150) return
 
-    //Tomar copia de los comentarios
-    const newComments = [...comments, comment]
+    const newComment = {}
 
-    //Actualizar BD
+    newComment.userId = user.uid
+    newComment.userName = user.displayName
+    newComment.msg = comment.trim()
+
+    const newComments = [...comments, newComment]
+
     firebase.db.collection("products").doc(id).update({ comments: newComments })
 
     setProduct({
@@ -352,9 +401,7 @@ const Product = () => {
       comments: newComments,
     })
 
-    setComment({
-      msg: "",
-    })
+    setComment("")
 
     setQueryDB(true)
   }
@@ -429,13 +476,22 @@ const Product = () => {
                   value={comment}
                   onChange={handleChange}
                 />
-                <Submit type="submit">Comment</Submit>
+                <SubmitContainer>
+                  {comment.trim().length > 0 &&
+                    comment.trim().length <= 150 && (
+                      <Help>
+                        {comment.trim().length < 80 &&
+                          "🧐 Makers appreciate thoughtful comments"}
+                        {comment.trim().length >= 80 && "🙂 Keep going..."}
+                      </Help>
+                    )}
+                  <Submit type="submit">Comment</Submit>
+                </SubmitContainer>
               </Form>
             )}
-            {comments.length === 0 && "Be the first to comment!"}
             <Comments>
               {comments.length > 0 && (
-                <ul>
+                <CommentsList>
                   {comments.map((comment, i) => (
                     <li key={`${comment.userId}-${i}`}>
                       <CommentUserContainer>
@@ -443,6 +499,9 @@ const Product = () => {
                           <UserIcon />
                         </UserIconContainer>
                         <CommentUser>{comment.userName}</CommentUser>
+                        <CommentUsername>
+                          @{comment.userName.toLowerCase().replace(" ", "")}
+                        </CommentUsername>
                         {isCreator(comment.userId) && (
                           <ProductOwner>Maker</ProductOwner>
                         )}
@@ -450,10 +509,15 @@ const Product = () => {
                       <p>{comment.msg}</p>
                     </li>
                   ))}
-                </ul>
+                </CommentsList>
               )}
             </Comments>
           </div>
+          <LaunchTitle>About this launch</LaunchTitle>
+          <LaunchSummary>
+            {name} was hunted by {company} in x. Made by {creator.name}. Posted
+            on {formatDate(date)}.
+          </LaunchSummary>
         </ProductContainer>
       </Article>
     </Layout>
