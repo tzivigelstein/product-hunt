@@ -1,5 +1,5 @@
-import { useState } from "react"
-import Router from "next/router"
+import { useEffect, useState } from "react"
+import Router, { useRouter } from "next/router"
 
 import styled from "@emotion/styled"
 
@@ -45,6 +45,14 @@ const InputSubmit = styled.button`
 const Search = () => {
   const [search, setSearch] = useState("")
 
+  const router = useRouter()
+
+  useEffect(() => {
+    if (router.query?.q) {
+      setSearch(router.query.q)
+    }
+  }, [router.query])
+
   const searchProduct = e => {
     e.preventDefault()
     if (search.trim() === "") return
@@ -60,6 +68,7 @@ const Search = () => {
       <InputText
         type="text"
         placeholder="Search"
+        value={search}
         onChange={e => setSearch(e.target.value)}
       />
       <InputSubmit type="submit">
