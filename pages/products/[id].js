@@ -515,8 +515,8 @@ const Product = () => {
           </div>
           <LaunchTitle>About this launch</LaunchTitle>
           <LaunchSummary>
-            {name} was hunted by {company} in x. Made by {creator.name}. Posted
-            on {formatDate(date)}.
+            {name} was hunted by {company} in {tags.map(s => s[0].toUpperCase() + s.slice(1)).join(", ")}. Made by{" "}
+            {creator.name}. Posted on {formatDate(date)}.
           </LaunchSummary>
         </ProductContainer>
       </Article>
