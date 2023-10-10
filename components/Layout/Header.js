@@ -9,7 +9,7 @@ import FirebaseContext from "../../firebase/context"
 
 const HeaderContainer = styled.header`
   border-bottom: 1px solid var(--light-gray);
-  padding: 1rem;
+  padding: 1.25rem 2rem;
   background-color: #fff;
   display: flex;
   justify-content: space-between;
