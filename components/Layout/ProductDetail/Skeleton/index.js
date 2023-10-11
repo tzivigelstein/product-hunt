@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
 
 const SkeletonProduct = styled.li`
-  padding: 2rem;
+  padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -10,6 +10,7 @@ const SkeletonProduct = styled.li`
 `
 
 const SkeletonContent = styled.div`
+  flex: 0 1 600px;
   display: grid;
   grid-template-columns: 1fr 3fr;
   gap: 2rem;
@@ -17,14 +18,16 @@ const SkeletonContent = styled.div`
 `
 
 const SkeletonImage = styled.div`
-  width: 142px;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  width: 100%;
+  height: 100%;
   aspect-ratio: 1.06 / 1;
   background-color: #f0f0f0;
   border-radius: 5px;
 `
 
 const SkeletonDetails = styled.div`
-  flex: 0 1 600px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -36,6 +39,15 @@ const SkeletonText = styled.div`
   height: 16px;
   background-color: #f0f0f0;
   border-radius: 4px;
+
+  @media (max-width: 830px) {
+    max-width: 70%;
+  }
+
+  @media (max-width: 480px) {
+    height: 13px;
+    display: ${props => (props.hideOnMobile ? "none" : "initial")};
+  }
 `
 
 const SkeletonVotes = styled.div`
@@ -59,7 +71,7 @@ export default function ProductDetailSkeleton({ hideVote }) {
         <SkeletonDetails>
           <SkeletonText />
           <SkeletonText width={120} />
-          <SkeletonText />
+          <SkeletonText hideOnMobile={true} />
         </SkeletonDetails>
       </SkeletonContent>
       {!hideVote && <SkeletonVotes />}

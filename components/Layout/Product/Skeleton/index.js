@@ -23,6 +23,12 @@ const SkeletonDetails = styled.div`
   flex: 0 1 600px;
   display: flex;
   gap: 5rem;
+
+  @media (max-width: 768px) {
+    display: grid;
+    max-width: 50%;
+    gap: 2rem;
+  }
 `
 
 const SkeletonInfo = styled.div`
