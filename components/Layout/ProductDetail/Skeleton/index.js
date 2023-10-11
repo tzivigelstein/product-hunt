@@ -15,6 +15,10 @@ const SkeletonContent = styled.div`
   grid-template-columns: 1fr 3fr;
   gap: 2rem;
   z-index: 2;
+
+  @media (max-width: 480px) {
+    gap: 1rem;
+  }
 `
 
 const SkeletonImage = styled.div`
