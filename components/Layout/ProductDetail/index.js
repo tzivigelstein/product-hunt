@@ -233,8 +233,6 @@ export default function ProductDetail({ product }) {
       .update({ votes: totalVotes, hasVoted: usersHaveVoted })
   }
 
-  console.log({ loaded, error })
-
   return (
     <Link href={`/products/${id}`}>
       <Product>
