@@ -29,6 +29,10 @@ const SkeletonDetails = styled.div`
     max-width: 50%;
     gap: 2rem;
   }
+
+  @media (max-width: 600px) {
+    max-width: 100%;
+  }
 `
 
 const SkeletonInfo = styled.div`
