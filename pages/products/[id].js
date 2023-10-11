@@ -9,6 +9,7 @@ import NotFound from "@components/Layout/404"
 import Layout from "@components/Layout/Layout"
 import UserIcon from "@components/UI/UserIcon"
 import formatDate from "@utils/formatDate"
+import ProductSkeleton from "../../components/Layout/Product/Skeleton"
 
 const ProductContainer = styled.div``
 
@@ -284,6 +285,7 @@ const Product = () => {
 
   const [product, setProduct] = useState({})
   const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [comment, setComment] = useState("")
   const [queryDB, setQueryDB] = useState(true)
 
@@ -319,12 +321,12 @@ const Product = () => {
           setError(true)
           setQueryDB(false)
         }
+
+        setLoading(false)
       }
       getProduct()
     }
   }, [id, product])
-
-  if (Object.keys(product).length === 0 && !error) return "Cargando..."
 
   const {
     name,
@@ -430,96 +432,103 @@ const Product = () => {
 
   return (
     <Layout>
-      <Article>
-        <ImageAndPosition>
-          <ImageContainer>
-            <Image src={imageurl} />
-          </ImageContainer>
-          <Position>New</Position>
-        </ImageAndPosition>
+      {loading && <ProductSkeleton />}
+      {!loading && !error && (
+        <Article>
+          <ImageAndPosition>
+            <ImageContainer>
+              <Image src={imageurl} />
+            </ImageContainer>
+            <Position>New</Position>
+          </ImageAndPosition>
 
-        <TitleSubtitleAndLinks>
-          <TitleAndSubtitle>
-            <Title>{name}</Title>
-            <Subtitle>{subtitle || description}</Subtitle>
-          </TitleAndSubtitle>
-          <Links>
-            <Visit target="_blank" bgColor="true" href={url}>
-              Visit
-            </Visit>
-            <Upvote onClick={handleVote} upvoted={hasVoted.includes(user?.uid)}>
-              <UpvoteIcon upvoted={hasVoted.includes(user?.uid)} />
-              {hasVoted.includes(user?.uid) ? "Upvoted" : "Upvote"} {votes}
-            </Upvote>
-          </Links>
-        </TitleSubtitleAndLinks>
-        <ProductContainer>
-          <Description>{description}</Description>
-          <Launched>
-            Launched in{" "}
-            {tags.map(tag => (
-              <Link href={`/category/${tag}`}>
-                <Category>{tag} </Category>
-              </Link>
-            ))}{" "}
-            by {company}
-          </Launched>
-          <div>
-            {user && (
-              <Form onSubmit={onSubmit}>
-                <UserIconContainer>
-                  <UserIcon />
-                </UserIconContainer>
-                <TextArea
-                  placeholder="What do you think?"
-                  height={height}
-                  value={comment}
-                  onChange={handleChange}
-                />
-                <SubmitContainer>
-                  {comment.trim().length > 0 &&
-                    comment.trim().length <= 150 && (
-                      <Help>
-                        {comment.trim().length < 80 &&
-                          "🧐 Makers appreciate thoughtful comments"}
-                        {comment.trim().length >= 80 && "🙂 Keep going..."}
-                      </Help>
-                    )}
-                  <Submit type="submit">Comment</Submit>
-                </SubmitContainer>
-              </Form>
-            )}
-            <Comments>
-              {comments.length > 0 && (
-                <CommentsList>
-                  {comments.map((comment, i) => (
-                    <li key={`${comment.userId}-${i}`}>
-                      <CommentUserContainer>
-                        <UserIconContainer>
-                          <UserIcon />
-                        </UserIconContainer>
-                        <CommentUser>{comment.userName}</CommentUser>
-                        <CommentUsername>
-                          @{comment.userName.toLowerCase().replace(" ", "")}
-                        </CommentUsername>
-                        {isCreator(comment.userId) && (
-                          <ProductOwner>Maker</ProductOwner>
-                        )}
-                      </CommentUserContainer>
-                      <p>{comment.msg}</p>
-                    </li>
-                  ))}
-                </CommentsList>
+          <TitleSubtitleAndLinks>
+            <TitleAndSubtitle>
+              <Title>{name}</Title>
+              <Subtitle>{subtitle || description}</Subtitle>
+            </TitleAndSubtitle>
+            <Links>
+              <Visit target="_blank" bgColor="true" href={url}>
+                Visit
+              </Visit>
+              <Upvote
+                onClick={handleVote}
+                upvoted={hasVoted.includes(user?.uid)}
+              >
+                <UpvoteIcon upvoted={hasVoted.includes(user?.uid)} />
+                {hasVoted.includes(user?.uid) ? "Upvoted" : "Upvote"} {votes}
+              </Upvote>
+            </Links>
+          </TitleSubtitleAndLinks>
+          <ProductContainer>
+            <Description>{description}</Description>
+            <Launched>
+              Launched in{" "}
+              {tags.map(tag => (
+                <Link href={`/category/${tag}`}>
+                  <Category>{tag} </Category>
+                </Link>
+              ))}{" "}
+              by {company}
+            </Launched>
+            <div>
+              {user && (
+                <Form onSubmit={onSubmit}>
+                  <UserIconContainer>
+                    <UserIcon />
+                  </UserIconContainer>
+                  <TextArea
+                    placeholder="What do you think?"
+                    height={height}
+                    value={comment}
+                    onChange={handleChange}
+                  />
+                  <SubmitContainer>
+                    {comment.trim().length > 0 &&
+                      comment.trim().length <= 150 && (
+                        <Help>
+                          {comment.trim().length < 80 &&
+                            "🧐 Makers appreciate thoughtful comments"}
+                          {comment.trim().length >= 80 && "🙂 Keep going..."}
+                        </Help>
+                      )}
+                    <Submit type="submit">Comment</Submit>
+                  </SubmitContainer>
+                </Form>
               )}
-            </Comments>
-          </div>
-          <LaunchTitle>About this launch</LaunchTitle>
-          <LaunchSummary>
-            {name} was hunted by {company} in {tags.map(s => s[0].toUpperCase() + s.slice(1)).join(", ")}. Made by{" "}
-            {creator.name}. Posted on {formatDate(date)}.
-          </LaunchSummary>
-        </ProductContainer>
-      </Article>
+              <Comments>
+                {comments.length > 0 && (
+                  <CommentsList>
+                    {comments.map((comment, i) => (
+                      <li key={`${comment.userId}-${i}`}>
+                        <CommentUserContainer>
+                          <UserIconContainer>
+                            <UserIcon />
+                          </UserIconContainer>
+                          <CommentUser>{comment.userName}</CommentUser>
+                          <CommentUsername>
+                            @{comment.userName.toLowerCase().replace(" ", "")}
+                          </CommentUsername>
+                          {isCreator(comment.userId) && (
+                            <ProductOwner>Maker</ProductOwner>
+                          )}
+                        </CommentUserContainer>
+                        <p>{comment.msg}</p>
+                      </li>
+                    ))}
+                  </CommentsList>
+                )}
+              </Comments>
+            </div>
+            <LaunchTitle>About this launch</LaunchTitle>
+            <LaunchSummary>
+              {name} was hunted by {company} in{" "}
+              {tags.map(s => s[0].toUpperCase() + s.slice(1)).join(", ")}. Made
+              by {creator.name}. Posted on {formatDate(date)}.
+            </LaunchSummary>
+          </ProductContainer>
+        </Article>
+      )}
     </Layout>
   )
 }

@@ -6,7 +6,7 @@ import styled from "@emotion/styled"
 import { default as formatTimeToNow } from "date-fns/formatDistanceToNow"
 import { enUS } from "date-fns/locale"
 
-import { FirebaseContext } from "../../firebase/index"
+import { FirebaseContext } from "../../../firebase/index"
 
 const Product = styled.li`
   padding: 1rem;

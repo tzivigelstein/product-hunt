@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
-import Layout from "../components/Layout/Layout"
+import Layout from "@components/Layout/Layout"
 import { useRouter } from "next/router"
-import useOrder from "../hooks/useOrder"
-import ProductDetail from "../components/Layout/ProductDetail"
+import useOrder from "@hooks/useOrder"
+import ProductDetail from "@components/Layout/ProductDetail"
 
 const SearchPage = () => {
   const router = useRouter()

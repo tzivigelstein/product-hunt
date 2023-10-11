@@ -4,10 +4,11 @@ import useOrder from "@hooks/useOrder"
 
 import Layout from "@components/Layout/Layout"
 import ProductDetail from "@components/Layout/ProductDetail"
+import { ProductListSkeleton } from "@components/Layout/ProductDetail/Skeleton"
 import HomeMessage from "@components/UI/HomeMessage"
 
 export default function Home() {
-  const { products, setOrder } = useOrder("date")
+  const { products, loading, setOrder } = useOrder("date")
   const [selectedValue, setSelectedValue] = useState("")
 
   const handleChange = event => {
@@ -39,9 +40,11 @@ export default function Home() {
             </select>
           </div>
           <ul className="product_list">
-            {products.map(product => (
-              <ProductDetail key={product.id} product={product} />
-            ))}
+            {!loading &&
+              products.map(product => (
+                <ProductDetail key={product.id} product={product} />
+              ))}
+            <ProductListSkeleton loading={loading} />
           </ul>
         </div>
       </div>
