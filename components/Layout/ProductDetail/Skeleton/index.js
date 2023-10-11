@@ -61,6 +61,9 @@ const SkeletonVotes = styled.div`
   z-index: 2;
   width: 62px;
   height: 74px;
+  @media (max-width: 480px) {
+    transform: scale(0.5);
+  }
 `
 
 export default function ProductDetailSkeleton({ hideVote }) {
