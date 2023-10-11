@@ -194,17 +194,14 @@ export default function ProductDetail({ product }) {
     }
   }, [])
 
-  const [loaded, setLoaded] = useState(false)
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(true)
 
   const handleImageLoaded = () => {
-    setLoaded(true)
     setLoading(false)
   }
 
   const handleImageError = () => {
-    setLoaded(false)
     setError(true)
   }
 

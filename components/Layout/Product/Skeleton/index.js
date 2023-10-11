@@ -13,7 +13,7 @@ const SkeletonContent = styled.div`
 `
 
 const SkeletonImage = styled.div`
-  width: 80px;
+  width: 72px;
   aspect-ratio: 1.06 / 1;
   background-color: #f0f0f0;
   border-radius: 5px;

@@ -47,6 +47,12 @@ const Image = styled.img`
   object-fit: cover;
 `
 
+const ImagePlaceholder = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0;
+`
+
 const TitleSubtitleAndLinks = styled.div`
   display: flex;
   justify-content: space-between;
@@ -289,6 +295,17 @@ const Product = () => {
   const [comment, setComment] = useState("")
   const [queryDB, setQueryDB] = useState(true)
 
+  const [imageError, setImageError] = useState(false)
+  const [imageloading, setImageLoading] = useState(true)
+
+  const handleImageLoaded = () => {
+    setImageLoading(false)
+  }
+
+  const handleImageError = () => {
+    setImageError(true)
+  }
+
   const handleChange = e => {
     const { scrollHeight } = e.target
     const newHeight = Math.min(maxHeight, Math.max(minHeight, scrollHeight))
@@ -437,7 +454,16 @@ const Product = () => {
         <Article>
           <ImageAndPosition>
             <ImageContainer>
-              <Image src={imageurl} />
+              {(imageloading || imageError) && <ImagePlaceholder />}
+              {!imageError && (
+                <Image
+                  style={imageloading ? { display: "none" } : {}}
+                  src={imageurl}
+                  alt={name + " logo"}
+                  onLoad={handleImageLoaded}
+                  onError={handleImageError}
+                />
+              )}
             </ImageContainer>
             <Position>New</Position>
           </ImageAndPosition>
