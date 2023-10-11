@@ -62,14 +62,10 @@ const Header = () => {
           justify-content: space-around;
         `}
       >
-        {user && (
-          <Button bgColor="true" onClick={() => firebase.signout()}>
-            Logout
-          </Button>
-        )}
+        {user && <Button onClick={() => firebase.signout()}>Logout</Button>}
         {!user && (
           <Link href="/login">
-            <Button bgColor="true">Sign in</Button>
+            <Button>Sign in</Button>
           </Link>
         )}
       </div>
