@@ -22,7 +22,7 @@ const SkeletonImage = styled.div`
   grid-column-end: 2;
   width: 100%;
   height: 100%;
-  aspect-ratio: 1.06 / 1;
+  aspect-ratio: 1.06 / 1.03;
   background-color: #f0f0f0;
   border-radius: 5px;
 `

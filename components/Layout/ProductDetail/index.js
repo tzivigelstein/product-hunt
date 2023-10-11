@@ -96,6 +96,13 @@ const Image = styled.img`
   aspect-ratio: 1.06 / 1;
 `
 
+const ImagePlaceholder = styled.div`
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1.06 / 1.03;
+  background-color: #f0f0f0;
+`
+
 const TagsAndComments = styled.div`
   display: flex;
   align-items: center;
@@ -187,6 +194,20 @@ export default function ProductDetail({ product }) {
     }
   }, [])
 
+  const [loaded, setLoaded] = useState(false)
+  const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  const handleImageLoaded = () => {
+    setLoaded(true)
+    setLoading(false)
+  }
+
+  const handleImageError = () => {
+    setLoaded(false)
+    setError(true)
+  }
+
   function handleVote(e) {
     e.stopPropagation()
 
@@ -212,12 +233,23 @@ export default function ProductDetail({ product }) {
       .update({ votes: totalVotes, hasVoted: usersHaveVoted })
   }
 
+  console.log({ loaded, error })
+
   return (
     <Link href={`/products/${id}`}>
       <Product>
         <ProductDescription>
           <ImageContainer>
-            <Image src={imageurl} />
+            {(loading || error) && <ImagePlaceholder />}
+            {!error && (
+              <Image
+                style={loading ? { display: "none" } : {}}
+                src={imageurl}
+                alt={name + " logo"}
+                onLoad={handleImageLoaded}
+                onError={handleImageError}
+              />
+            )}
           </ImageContainer>
           <ProductDetails>
             <Title>{name}</Title>
