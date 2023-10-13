@@ -6,6 +6,7 @@ import Button from "../UI/Button"
 import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import FirebaseContext from "../../firebase/context"
+import UserIcon from "@components/UI/UserIcon"
 
 const HeaderContainer = styled.header`
   border-bottom: 1px solid var(--light-gray);
@@ -13,6 +14,10 @@ const HeaderContainer = styled.header`
   background-color: #fff;
   display: flex;
   justify-content: space-between;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 999;
 `
 
 const LogoAndSearch = styled.div`
@@ -34,8 +39,23 @@ const NavContainer = styled.div`
   display: flex;
 `
 
+const UserIconContainer = styled.div`
+  background-color: var(--orange);
+  display: flex;
+  width: max-content;
+  border-radius: 100%;
+  padding: 0.3rem;
+  height: max-content;
+  cursor: pointer;
+
+  svg {
+    width: 28px;
+    height: 28px;
+  }
+`
+
 const Header = () => {
-  const { user, firebase } = useContext(FirebaseContext)
+  const { user } = useContext(FirebaseContext)
 
   return (
     <HeaderContainer>
@@ -62,7 +82,13 @@ const Header = () => {
           justify-content: space-around;
         `}
       >
-        {user && <Button onClick={() => firebase.signout()}>Logout</Button>}
+        {user && (
+          <Link href={`/${user.displayName}`}>
+            <UserIconContainer>
+              <UserIcon />
+            </UserIconContainer>
+          </Link>
+        )}
         {!user && (
           <Link href="/login">
             <Button>Sign in</Button>
