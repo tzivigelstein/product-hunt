@@ -1,8 +1,8 @@
-import styled from '@emotion/styled'
-import formatDistanceToNow from 'date-fns/formatDistanceToNow'
-import { es } from 'date-fns/locale'
-import Link from 'next/link'
-import CommentIcon from '../UI/CommentIcon'
+import styled from "@emotion/styled"
+import formatDistanceToNow from "date-fns/formatDistanceToNow"
+import {es} from "date-fns/locale"
+import Link from "next/link"
+import CommentIcon from "../UI/CommentIcon"
 
 const Product = styled.li`
   padding: 4rem;
@@ -85,8 +85,8 @@ const Votes = styled.div`
   }
 `
 
-const ProductDetails = ({ product }) => {
-  const { id, name, date, description, company, url, imageurl, creator, votes, comments } = product
+const ProductDetails = ({product}) => {
+  const {id, name, subtitle, date, description, imageurl, votes, comments} = product
   return (
     <Product>
       <ProductDescription>
@@ -97,14 +97,14 @@ const ProductDetails = ({ product }) => {
           <Link href="/products/[id]" as={`/products/${id}`}>
             <Title>{name}</Title>
           </Link>
-          <DescriptionText>{description}</DescriptionText>
+          <DescriptionText>{subtitle || description}</DescriptionText>
           <Comments>
             <div>
               <CommentIcon />
               <p>{comments.length}</p>
             </div>
           </Comments>
-          <p style={{ fontSize: '13px' }}>Publicado hace {formatDistanceToNow(new Date(date), { locale: es })}</p>
+          <p style={{fontSize: "13px"}}>Publicado hace {formatDistanceToNow(new Date(date), {locale: es})}</p>
         </div>
       </ProductDescription>
       <Votes>
