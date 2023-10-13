@@ -20,10 +20,6 @@ module.exports = {
         source: "/@:username",
         destination: "/:username",
       },
-      {
-        source: "/:username",
-        destination: "/404",
-      },
     ]
   },
 }
