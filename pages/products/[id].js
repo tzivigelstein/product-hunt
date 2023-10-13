@@ -268,7 +268,7 @@ const ProductOwner = styled.p`
 `
 
 const LaunchTitle = styled.h4`
-  margin-bottom: 24px !important;
+  margin-bottom: 24px;
   color: #21293c;
   font-size: 16px;
   line-height: 24px;
@@ -277,7 +277,7 @@ const LaunchTitle = styled.h4`
 `
 
 const LaunchSummary = styled.p`
-  margin-bottom: 32px !important;
+  margin-bottom: 32px;
   color: #4b587c;
   font-size: 14px;
   line-height: 24px;
