@@ -13,4 +13,17 @@ module.exports = {
 
     return config
   },
+
+  async rewrites() {
+    return [
+      {
+        source: "/@:username",
+        destination: "/:username",
+      },
+      {
+        source: "/:username",
+        destination: "/404",
+      },
+    ]
+  },
 }
