@@ -1,13 +1,13 @@
 import { useState, useContext } from "react"
-import Layout from "../components/Layout/Layout"
-import useValidation from "../hooks/useValidation"
-import productValidation from "../validation/productValidation"
+import Layout from "../../components/Layout/Layout"
+import useValidation from "../../hooks/useValidation"
+import productValidation from "../../validation/productValidation"
 import { useRouter } from "next/router"
 import FileUploader from "react-firebase-file-uploader"
-import { Form, Field, InputSubmit, Error } from "../components/UI/Form"
+import { Form, Field, InputSubmit, Error } from "../../components/UI/Form"
 import { css } from "@emotion/core"
-import { FirebaseContext } from "../firebase/index"
-import NotFound from "../components/Layout/404"
+import { FirebaseContext } from "../../firebase/index"
+import NotFound from "../../components/Layout/404"
 
 const initialState = {
   name: "",
