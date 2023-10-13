@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/router"
 
 import useOrder from "@hooks/useOrder"
 
@@ -8,8 +9,27 @@ import { ProductListSkeleton } from "@components/Layout/ProductDetail/Skeleton"
 import HomeMessage from "@components/UI/HomeMessage"
 
 export default function Home() {
-  const { products, loading, setOrder } = useOrder("date")
-  const [selectedValue, setSelectedValue] = useState("")
+  const router = useRouter()
+
+  const { popular } = router.query
+
+  const { products, loading, setOrder } = useOrder(
+    typeof popular === "string" ? "votes" : "date"
+  )
+
+  const [selectedValue, setSelectedValue] = useState(
+    typeof popular === "string" ? "popular" : "date"
+  )
+
+  useEffect(() => {
+    if (typeof popular === "string") {
+      setOrder("votes")
+      setSelectedValue("popular")
+    } else {
+      setOrder("date")
+      setSelectedValue("featured")
+    }
+  }, [popular])
 
   const handleChange = event => {
     setSelectedValue(event.target.value)
@@ -21,6 +41,11 @@ export default function Home() {
     }
 
     setOrder(OPTIONS_MAPPING[value])
+
+    const currentPath = window.location.pathname
+    const newPath = value === "popular" ? "/?popular" : currentPath
+
+    window.history.pushState({ path: newPath }, "", newPath)
   }
 
   return (
@@ -30,11 +55,7 @@ export default function Home() {
           <HomeMessage />
           <div className="heading_container">
             <h1 className="heading">Your next favorite thing 👇</h1>
-            <select
-              value={selectedValue}
-              onChange={handleChange}
-              defaultChecked
-            >
+            <select value={selectedValue} onChange={handleChange}>
               <option value="featured">Featured</option>
               <option value="popular">Popular</option>
             </select>
