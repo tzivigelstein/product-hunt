@@ -65,7 +65,7 @@ export default function Home() {
               products.map(product => (
                 <ProductDetail key={product.id} product={product} />
               ))}
-            <ProductListSkeleton loading={loading} />
+            <ProductListSkeleton loading={loading} hideVote={true} />
           </ul>
         </div>
       </div>

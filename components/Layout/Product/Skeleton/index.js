@@ -76,7 +76,7 @@ const SkeletonDescription = styled.div`
   gap: 0.8rem;
 `
 
-export default function ProductSkeleton({ hideVote }) {
+export default function ProductSkeleton() {
   return (
     <SkeletonArticle>
       <SkeletonContent>
