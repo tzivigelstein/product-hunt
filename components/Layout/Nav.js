@@ -25,7 +25,7 @@ const Nav = () => {
       <Link href="/">
         <a>Featured</a>
       </Link>
-      <Link href="?popular">
+      <Link href="/?popular">
         <a>Popular</a>
       </Link>
     </Navigation>
