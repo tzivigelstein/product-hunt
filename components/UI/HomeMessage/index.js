@@ -7,7 +7,7 @@ export default function HomeMessage() {
       <p className={styles.subtitle}>Check it out carefully tough, it's in the works ⚒️</p>
       <a
         className={styles.link}
-        href="https://product-hunt-clone-git-development-tzivi.vercel.app/"
+        href="https://producthunt-dev.vercel.app/"
         target="_blank"
         rel="noreferrer noopener nofollow"
       >
