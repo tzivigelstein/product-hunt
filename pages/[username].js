@@ -1,11 +1,11 @@
+import { useContext, useEffect } from "react"
+import Link from "next/link"
+import { useRouter } from "next/router"
 import styled from "@emotion/styled"
 
+import FirebaseContext from "../firebase/context"
 import Layout from "@components/Layout/Layout"
 import UserIcon from "@components/UI/UserIcon"
-import Link from "next/link"
-import { useContext } from "react"
-import FirebaseContext from "../firebase/context"
-import { useRouter } from "next/router"
 
 const Container = styled.article`
   padding: 2rem 3rem;
@@ -61,9 +61,17 @@ const UserContainer = styled.div`
   width: 100%;
 `
 
+const InfoAndActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+`
+
 const NameAndEmail = styled.div`
   display: flex;
   flex-direction: column;
+  align-self: flex-start;
+  margin-top: 0.5rem;
 `
 
 const H1 = styled.h1`
@@ -82,6 +90,25 @@ const Email = styled.span`
   font-size: 18px;
   line-height: 28px;
   font-weight: 300;
+`
+
+const EditProfileLink = styled.button`
+  text-decoration: none;
+  appearance: none;
+  outline: none;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  text-align: center;
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border: 1px solid #d9e1ec;
+  background: #fff;
+  color: #21293c;
+  cursor: pointer;
+  height: max-content;
+  margin-left: auto;
 `
 
 const ActionsContainer = styled.div`
@@ -133,20 +160,31 @@ export default function Profile({ userRecord }) {
 
   const { user, firebase } = useContext(FirebaseContext)
 
+  useEffect(() => {
+    if (!userRecord) {
+      router.push("/404")
+    }
+  }, [])
+
   return (
     <Layout>
       <Gradient>
         <Container>
           <MainUserInfo>
-            <UserIconContainer>
-              <UserIcon />
-            </UserIconContainer>
             {userRecord && (
               <UserContainer>
-                <NameAndEmail>
-                  <H1>{displayName}</H1>
-                  <Email>{email}</Email>
-                </NameAndEmail>
+                <InfoAndActions>
+                  <UserIconContainer>
+                    <UserIcon />
+                  </UserIconContainer>
+                  <NameAndEmail>
+                    <H1>{displayName}</H1>
+                    <Email>{email}</Email>
+                  </NameAndEmail>
+                  <Link href="/my/details/edit">
+                    <EditProfileLink>Edit my profile</EditProfileLink>
+                  </Link>
+                </InfoAndActions>
                 {user && user.uid === userRecord.uid && (
                   <ActionsContainer>
                     <Link href="/posts/new">
@@ -180,7 +218,16 @@ export async function getServerSideProps(context) {
   const response = await fetch(`${baseUrl}/api/profile/${username}`)
   const data = await response.json()
 
+  const userRecord = data.userRecord || null
+
+  if (!userRecord) {
+    return {
+      props: {},
+      notFound: true,
+    }
+  }
+
   return {
-    props: { userRecord: data.userRecord || null },
+    props: { userRecord },
   }
 }
