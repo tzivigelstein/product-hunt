@@ -44,13 +44,24 @@ const MainUserInfo = styled.div`
 const UserIconContainer = styled.div`
   background-color: var(--orange);
   display: flex;
-  width: max-content;
   border-radius: 100%;
-  height: max-content;
+  width: 120px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+
+  svg,
+  img {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    object-fit: cover;
+  }
 
   svg {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
   }
 `
 
@@ -175,7 +186,11 @@ export default function Profile({ userRecord }) {
               <UserContainer>
                 <InfoAndActions>
                   <UserIconContainer>
-                    <UserIcon />
+                    {user?.photoURL ? (
+                      <img src={user?.photoURL} />
+                    ) : (
+                      <UserIcon />
+                    )}
                   </UserIconContainer>
                   <NameAndEmail>
                     <H1>{displayName}</H1>
@@ -215,15 +230,18 @@ export async function getServerSideProps(context) {
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 
-  const response = await fetch(`${baseUrl}/api/profile/${username}`)
+  const response = await fetch(
+    `${baseUrl}/api/profile/${username.replace("@", "")}`
+  )
   const data = await response.json()
 
   const userRecord = data.userRecord || null
 
   if (!userRecord) {
     return {
-      props: {},
-      notFound: true,
+      props: {
+        notFound: true,
+      },
     }
   }
 
