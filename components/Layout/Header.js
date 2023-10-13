@@ -18,6 +18,10 @@ const HeaderContainer = styled.header`
   top: 0;
   left: 0;
   z-index: 999;
+
+  @media (max-width: 760px) {
+    padding: 1.25rem 1rem;
+  }
 `
 
 const LogoAndSearch = styled.div`
@@ -42,15 +46,20 @@ const NavContainer = styled.div`
 const UserIconContainer = styled.div`
   background-color: var(--orange);
   display: flex;
-  width: max-content;
   border-radius: 100%;
-  padding: 0.3rem;
-  height: max-content;
+  width: 40px;
+  aspect-ratio: 1;
   cursor: pointer;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
 
-  svg {
-    width: 28px;
-    height: 28px;
+  svg,
+  img {
+    width: 100%; 
+    padding: 0;
+    margin: 0;
+    object-fit: cover;
   }
 `
 
@@ -83,9 +92,9 @@ const Header = () => {
         `}
       >
         {user && (
-          <Link href={`/${user.displayName}`}>
+          <Link href={`/@${user.displayName}`}>
             <UserIconContainer>
-              <UserIcon />
+              {user.photoURL ? <img src={user.photoURL} /> : <UserIcon />}
             </UserIconContainer>
           </Link>
         )}
