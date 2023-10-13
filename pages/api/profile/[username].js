@@ -20,8 +20,6 @@ export default async function handler(req, res) {
       user => user.displayName.toLowerCase() === username
     )
 
-    console.log(users)
-
     res.status(200).json({ userRecord })
   } catch (error) {
     console.error("Error fetching user data:", error)

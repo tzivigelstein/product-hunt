@@ -131,8 +131,6 @@ export default function Profile({ userRecord }) {
 
   const router = useRouter()
 
-  console.log(rest)
-
   const { user, firebase } = useContext(FirebaseContext)
 
   return (
