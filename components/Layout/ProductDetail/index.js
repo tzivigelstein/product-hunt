@@ -180,6 +180,7 @@ export default function ProductDetail({ product }) {
     tags,
     comments,
     hasVoted,
+    slug,
   } = product
 
   const [upvoted, setUpvoted] = useState(false)
@@ -223,7 +224,6 @@ export default function ProductDetail({ product }) {
 
     setUpvoted(usersHaveVoted.includes(user.uid))
 
-    //Actualizar BD
     firebase.db
       .collection("products")
       .doc(id)
@@ -231,7 +231,7 @@ export default function ProductDetail({ product }) {
   }
 
   return (
-    <Link href={`/products/${id}`}>
+    <Link href={`/posts/${slug}`}>
       <Product>
         <ProductDescription>
           <ImageContainer>
