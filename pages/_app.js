@@ -10,7 +10,7 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <Head>
-        <link rel="shortcut icon" href="product-hunt.svg" type="image/png" />
+        <link rel="shortcut icon" href="/product-hunt.svg" type="image/png" />
       </Head>
       <FirebaseContext.Provider
         value={{
