@@ -1,14 +1,15 @@
-import app from 'firebase/app'
-import firebaseConfig from './config'
-import 'firebase/auth'
-import 'firebase/firestore'
-import 'firebase/storage'
+import app from "firebase/app"
+import firebaseConfig from "./config"
+import "firebase/auth"
+import "firebase/firestore"
+import "firebase/storage"
 
 class Firebase {
   constructor() {
     if (!app.apps.length) {
       app.initializeApp(firebaseConfig)
     }
+
     this.auth = app.auth()
     this.db = app.firestore()
     this.storage = app.storage()
@@ -16,7 +17,10 @@ class Firebase {
 
   //Registro de usuario
   async signup(name, email, password) {
-    const newUser = await this.auth.createUserWithEmailAndPassword(email, password)
+    const newUser = await this.auth.createUserWithEmailAndPassword(
+      email,
+      password
+    )
 
     return await newUser.user.updateProfile({
       displayName: name,

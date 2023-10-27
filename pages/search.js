@@ -1,41 +1,45 @@
-import { useEffect, useState } from 'react'
-import Layout from '../components/Layout/Layout'
-import { useRouter } from 'next/router'
-import useOrder from '../Hooks/useOrder'
-import ProductDetails from '../components/Layout/ProductDetails'
+import { useEffect, useState } from "react"
+import Layout from "@components/Layout/Layout"
+import { useRouter } from "next/router"
+import useOrder from "@hooks/useOrder"
+import ProductDetail from "@components/Layout/ProductDetail"
 
 const SearchPage = () => {
   const router = useRouter()
-  const [search, setSearch] = useState([])
+  const [searchProducts, setSearchProducts] = useState([])
 
   const {
     query: { q },
   } = router
 
-  const { products } = useOrder('date')
+  const { products } = useOrder("date")
 
   useEffect(() => {
-    const search = q.toLowerCase()
-    const filtered = products.filter(product => {
-      return (
-        product.name.toLowerCase().includes(search) ||
-        product.description.toLowerCase().includes(search) ||
-        product.company.toLowerCase().includes(search)
+    if (q) {
+      const query = q.toLowerCase()
+      const filteredProducts = products.filter(
+        ({ name, description, company }) => {
+          const fields = [name, description, company]
+
+          for (const field of fields) {
+            return field.toLowerCase().includes(query)
+          }
+        }
       )
-    })
-    setSearch(filtered)
+
+      setSearchProducts(filteredProducts)
+    }
   }, [q, products])
 
   return (
     <Layout>
-      <div className="listado-productos">
-        <div className="contenedor">
-          <h3>Resultados por: {q}</h3>
-          <div className="bg-white">
-            {search.map(filt => (
-              <ProductDetails key={filt.id} product={filt} />
+      <div className="wrapper">
+        <div className="container">
+          <ul className="product_list">
+            {searchProducts.map(searchProduct => (
+              <ProductDetail key={searchProduct.id} product={searchProduct} />
             ))}
-          </div>
+          </ul>
         </div>
       </div>
     </Layout>

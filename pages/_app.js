@@ -1,6 +1,8 @@
-import firebase, { FirebaseContext } from '../firebase/index'
-import useAuth from '../Hooks/useAuth'
-import Head from 'next/head'
+import "@styles/globals.css"
+import Head from "next/head"
+
+import firebase, { FirebaseContext } from "../firebase/index"
+import useAuth from "@hooks/useAuth"
 
 const MyApp = ({ Component, pageProps }) => {
   const user = useAuth()

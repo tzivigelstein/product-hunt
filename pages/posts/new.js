@@ -1,28 +1,30 @@
-import { useState, useContext } from 'react'
-import Layout from '../components/Layout/Layout'
-import useValidation from '../Hooks/useValidation'
-import productValidation from '../validation/productValidation'
-import { useRouter } from 'next/router'
-import FileUploader from 'react-firebase-file-uploader'
-import { Form, Field, InputSubmit, Error } from '../components/UI/Form'
-import { css } from '@emotion/core'
-import { FirebaseContext } from '../firebase/index'
-import NotFound from '../components/Layout/404'
+import { useState, useContext } from "react"
+import Layout from "../../components/Layout/Layout"
+import useValidation from "../../hooks/useValidation"
+import productValidation from "../../validation/productValidation"
+import { useRouter } from "next/router"
+import FileUploader from "react-firebase-file-uploader"
+import { Form, Field, InputSubmit, Error } from "../../components/UI/Form"
+import { css } from "@emotion/core"
+import { FirebaseContext } from "../../firebase/index"
+import NotFound from "../../components/Layout/404"
 
 const initialState = {
-  name: '',
-  company: '',
-  image: '',
-  url: '',
-  description: '',
+  name: "",
+  subtitle: "",
+  company: "",
+  image: "",
+  url: "",
+  description: "",
+  tags: [],
 }
 
 const NewProduct = () => {
   //State de las imagenes
-  const [imagename, setImageName] = useState('')
+  const [imagename, setImageName] = useState("")
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
-  const [imageurl, setImageUrl] = useState('')
+  const [imageurl, setImageUrl] = useState("")
 
   const { user, firebase } = useContext(FirebaseContext)
 
@@ -30,25 +32,24 @@ const NewProduct = () => {
 
   const router = useRouter()
 
-  const [error, setError] = useState('')
+  const [error, setError] = useState("")
 
-  const { values, errors, handleSubmit, handleChange, handleBlur } = useValidation(
-    initialState,
-    productValidation,
-    newProduct
-  )
+  const { values, errors, handleSubmit, handleChange, handleBlur } =
+    useValidation(initialState, productValidation, newProduct)
 
-  const { name, company, url, description } = values
+  const { name, company, url, description, tags, subtitle } = values
 
   async function newProduct() {
     //Si el user no esta autenticado
     if (!user) {
-      router.push('/login')
+      router.push("/login")
     }
 
     //Crear un nuevo producto como objeto
     const product = {
       name,
+      subtitle,
+      tags,
       company,
       url,
       imageurl,
@@ -64,8 +65,8 @@ const NewProduct = () => {
     }
 
     //Insertar en la base de datos
-    firebase.db.collection('products').add(product)
-    return router.push('/')
+    firebase.db.collection("products").add(product)
+    return router.push("/")
   }
 
   const handleUploadStart = () => {
@@ -85,7 +86,7 @@ const NewProduct = () => {
     setUploading(false)
     setImageName(name)
     firebase.storage
-      .ref('products')
+      .ref("products")
       .child(name)
       .getDownloadURL()
       .then(url => {
@@ -96,9 +97,10 @@ const NewProduct = () => {
   return (
     <div>
       <Layout>
-        {!user ? (
+        {!user && (
           <NotFound text="Lo sentimos, no hemos encontrado tu usuario. Prueba iniciando sesión" />
-        ) : (
+        )}
+        {user && (
           <>
             <h1
               css={css`
@@ -146,7 +148,7 @@ const NewProduct = () => {
                   <FileUploader
                     accept="image/*"
                     randomizeFilename
-                    storageRef={firebase.storage.ref('products')}
+                    storageRef={firebase.storage.ref("products")}
                     onUploadStart={handleUploadStart}
                     onUploadError={handleUploadError}
                     onUploadSuccess={handleUploadSuccess}
@@ -187,6 +189,36 @@ const NewProduct = () => {
                 </Field>
 
                 {errors.description && <Error>{errors.description}</Error>}
+
+                <Field>
+                  <label htmlFor="tags">Tags</label>
+                  <input
+                    id="tags"
+                    type="text"
+                    placeholder="Tags"
+                    name="tags"
+                    value={tags}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Field>
+
+                {errors.tags && <Error>{errors.tags}</Error>}
+
+                <Field>
+                  <label htmlFor="subtitle">Subtitle</label>
+                  <input
+                    id="subtitle"
+                    type="text"
+                    placeholder="Subtitle"
+                    name="subtitle"
+                    value={subtitle}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Field>
+
+                {errors.subtitle && <Error>{errors.subtitle}</Error>}
               </div>
               {error && <Error>{error}</Error>}
 

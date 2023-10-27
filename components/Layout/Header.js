@@ -1,100 +1,110 @@
-import { useContext } from 'react'
-import Search from '../UI/Search'
-import Nav from './Nav'
-import Link from 'next/link'
-import Button from '../UI/Button'
-import styled from '@emotion/styled'
-import { css } from '@emotion/core'
-import FirebaseContext from '../../firebase/context'
+import { useContext } from "react"
+import Search from "../UI/Search"
+import Nav from "./Nav"
+import Link from "next/link"
+import Button from "../UI/Button"
+import styled from "@emotion/styled"
+import { css } from "@emotion/core"
+import FirebaseContext from "../../firebase/context"
+import UserIcon from "@components/UI/UserIcon"
 
-const HeaderContainer = styled.div`
-  max-width: 1200px;
-  width: 95%;
-  margin: 0 auto;
-  @media (min-width: 768px) {
-    display: flex;
-    justify-content: space-between;
+const HeaderContainer = styled.header`
+  border-bottom: 1px solid var(--light-gray);
+  padding: 1.25rem 2rem;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 999;
+
+  @media (max-width: 760px) {
+    padding: 1.25rem 1rem;
   }
 `
 
-const Logo = styled.a`
-  color: var(--naranja);
-  font-size: 4rem;
-  line-height: 0;
-  font-weight: 700;
-  font-family: 'Roboto Slab', serif;
-  margin-right: 2rem;
+const LogoAndSearch = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+
+  @media (max-width: 480px) {
+    align-items: flex-start;
+    gap: 1rem;
+  }
+`
+
+const ProductHuntLogo = styled.picture`
+  height: 40px;
 `
 
 const NavContainer = styled.div`
   display: flex;
+`
+
+const UserIconContainer = styled.div`
+  background-color: var(--orange);
+  display: flex;
+  border-radius: 100%;
+  width: 40px;
+  aspect-ratio: 1;
+  cursor: pointer;
+  overflow: hidden;
+  justify-content: center;
   align-items: center;
 
-  @media (max-width: 480px) {
-    flex-direction: column;
-    align-items: center;
+  svg,
+  img {
+    width: 100%; 
+    padding: 0;
+    margin: 0;
+    object-fit: cover;
   }
 `
 
 const Header = () => {
-  const { user, firebase } = useContext(FirebaseContext)
+  const { user } = useContext(FirebaseContext)
 
   return (
-    <header
-      css={css`
-        border-bottom: 2px solid var(--gris3);
-        padding: 1rem 0;
-        background-color: #fff;
-      `}
-    >
-      <HeaderContainer>
-        <NavContainer>
-          <div
-            css={css`
-              display: flex;
-              align-items: center;
-            `}
-          >
-            <Link href="/">
-              <Logo>P</Logo>
-            </Link>
-            <Search />
-          </div>
-          <Nav />
-        </NavContainer>
-        <div
-          css={css`
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-          `}
-        >
-          {user ? (
-            <>
-              <p
-                css={css`
-                  margin-right: 2rem;
-                `}
-              >
-                Bienvenido, {user.displayName}
-              </p>
-              <Button bgColor="true" onClick={() => firebase.signout()}>
-                Cerrar sesión
-              </Button>
-            </>
-          ) : (
-            <>
-              <Link href="/login">
-                <Button bgColor="true">Iniciar sesión</Button>
-              </Link>
-              <Link href="/signup">
-                <Button style={{color: "#222", borderColor: "#222"}}>Registrarse</Button>
-              </Link>
-            </>
-          )}
-        </div>
-      </HeaderContainer>
-    </header>
+    <HeaderContainer>
+      <NavContainer>
+        <LogoAndSearch>
+          <Link href="/">
+            <ProductHuntLogo>
+              <source
+                role="presentation"
+                media="(max-width: 480px)"
+                srcSet="/product-hunt.svg"
+              />
+              <img alt="Product Hunt Logo" src="/product-hunt-full.svg" />
+            </ProductHuntLogo>
+          </Link>
+          <Search />
+        </LogoAndSearch>
+        <Nav />
+      </NavContainer>
+      <div
+        css={css`
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+        `}
+      >
+        {user && (
+          <Link href={`/@${user.displayName}`}>
+            <UserIconContainer>
+              {user.photoURL ? <img src={user.photoURL} /> : <UserIcon />}
+            </UserIconContainer>
+          </Link>
+        )}
+        {!user && (
+          <Link href="/login">
+            <Button>Sign in</Button>
+          </Link>
+        )}
+      </div>
+    </HeaderContainer>
   )
 }
 
