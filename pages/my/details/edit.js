@@ -237,7 +237,7 @@ export default function Edit() {
         <MainUserInfo>
           <HeadingContainer>
             <H1>My details</H1>
-            <Link href={`/@${user?.displayName}`}>
+            <Link href={`/@${user?.displayName}`} legacyBehavior>
               <ViewProfileLink>View my profile</ViewProfileLink>
             </Link>
           </HeadingContainer>
@@ -294,5 +294,5 @@ export default function Edit() {
         </MainUserInfo>
       </Container>
     </Layout>
-  )
+  );
 }

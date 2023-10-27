@@ -27,14 +27,14 @@ const NavLink = styled.a`
 const Nav = () => {
   return (
     <Navigation>
-      <Link href="/">
+      <Link href="/" legacyBehavior>
         <NavLink>Featured</NavLink>
       </Link>
-      <Link href="/?popular">
+      <Link href="/?popular" legacyBehavior>
         <NavLink>Popular</NavLink>
       </Link>
     </Navigation>
-  )
+  );
 }
 
 export default Nav

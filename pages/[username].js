@@ -196,13 +196,13 @@ export default function Profile({ userRecord }) {
                     <H1>{displayName}</H1>
                     <Email>{email}</Email>
                   </NameAndEmail>
-                  <Link href="/my/details/edit">
+                  <Link href="/my/details/edit" legacyBehavior>
                     <EditProfileLink>Edit my profile</EditProfileLink>
                   </Link>
                 </InfoAndActions>
                 {user && user.uid === userRecord.uid && (
                   <ActionsContainer>
-                    <Link href="/posts/new">
+                    <Link href="/posts/new" legacyBehavior>
                       <NewProduct>Create a new post</NewProduct>
                     </Link>
                     <Logout
@@ -221,7 +221,7 @@ export default function Profile({ userRecord }) {
         </Container>
       </Gradient>
     </Layout>
-  )
+  );
 }
 
 export async function getServerSideProps(context) {

@@ -435,7 +435,7 @@ export default function Product({ product }) {
           <Launched>
             Launched in{" "}
             {tags.map(tag => (
-              <Link key={tag} href={`/category/${tag}`}>
+              <Link key={tag} href={`/category/${tag}`} legacyBehavior>
                 <Category>{tag} </Category>
               </Link>
             ))}{" "}
@@ -501,7 +501,7 @@ export default function Product({ product }) {
         </ProductContainer>
       </Article>
     </Layout>
-  )
+  );
 }
 
 export async function getServerSideProps(context) {

@@ -231,7 +231,7 @@ export default function ProductDetail({ product }) {
   }
 
   return (
-    <Link href={`/posts/${slug}`}>
+    <Link href={`/posts/${slug}`} legacyBehavior>
       <Product>
         <ProductDescription>
           <ImageContainer>
@@ -271,5 +271,5 @@ export default function ProductDetail({ product }) {
         </Votes>
       </Product>
     </Link>
-  )
+  );
 }

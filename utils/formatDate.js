@@ -23,5 +23,5 @@ export default function formatDate(date) {
           return day + "th"
       }
     }
-  })
+  });
 }
