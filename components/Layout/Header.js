@@ -70,7 +70,7 @@ const Header = () => {
     <HeaderContainer>
       <NavContainer>
         <LogoAndSearch>
-          <Link href="/">
+          <Link href="/" legacyBehavior>
             <ProductHuntLogo>
               <source
                 role="presentation"
@@ -92,20 +92,20 @@ const Header = () => {
         `}
       >
         {user && (
-          <Link href={`/@${user.displayName}`}>
+          <Link href={`/@${user.displayName}`} legacyBehavior>
             <UserIconContainer>
               {user.photoURL ? <img src={user.photoURL} /> : <UserIcon />}
             </UserIconContainer>
           </Link>
         )}
         {!user && (
-          <Link href="/login">
+          <Link href="/login" legacyBehavior>
             <Button>Sign in</Button>
           </Link>
         )}
       </div>
     </HeaderContainer>
-  )
+  );
 }
 
 export default Header

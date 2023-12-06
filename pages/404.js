@@ -160,7 +160,7 @@ export default function NotFound() {
               the homepage
             </Text>
             <ActionsContainer>
-              <Link href="/">
+              <Link href="/" legacyBehavior>
                 <ActionLink>Go to the homepage</ActionLink>
               </Link>
               <ActionButton
@@ -176,5 +176,5 @@ export default function NotFound() {
         </MessageContainer>
       </Container>
     </Layout>
-  )
+  );
 }

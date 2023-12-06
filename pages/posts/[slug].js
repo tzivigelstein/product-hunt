@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import { useRouter } from "next/router"
 import styled from "@emotion/styled"
 import Link from "next/link"
@@ -10,6 +10,7 @@ import Layout from "@components/Layout/Layout"
 import UserIcon from "@components/UI/UserIcon"
 import formatDate from "@utils/formatDate"
 import ProductSkeleton from "../../components/Layout/Product/Skeleton"
+import { getPostBySlug } from "../../firebase/utils"
 
 const ProductContainer = styled.div``
 
@@ -284,14 +285,11 @@ const LaunchSummary = styled.p`
   font-weight: 400;
 `
 
-const Product = () => {
+export default function Product({ product }) {
   const [minHeight] = useState(64)
   const [maxHeight] = useState(200)
   const [height, setHeight] = useState(minHeight)
 
-  const [product, setProduct] = useState({})
-  const [error, setError] = useState(false)
-  const [loading, setLoading] = useState(true)
   const [comment, setComment] = useState("")
   const [queryDB, setQueryDB] = useState(true)
 
@@ -322,28 +320,6 @@ const Product = () => {
   const { user, firebase } = useContext(FirebaseContext)
 
   const router = useRouter()
-  const {
-    query: { id },
-  } = router
-
-  useEffect(() => {
-    if (id && queryDB) {
-      const getProduct = async () => {
-        const query = await firebase.db.collection("products").doc(id)
-        const product = await query.get()
-        if (product.exists) {
-          setProduct(product.data())
-          setQueryDB(false)
-        } else {
-          setError(true)
-          setQueryDB(false)
-        }
-
-        setLoading(false)
-      }
-      getProduct()
-    }
-  }, [id, product])
 
   const {
     name,
@@ -360,7 +336,6 @@ const Product = () => {
     date,
   } = product
 
-  //Funcion que ejecuta los votos
   const handleVote = () => {
     if (!user) return router.push("/login")
 
@@ -368,7 +343,6 @@ const Product = () => {
     let usersHaveVoted = [...hasVoted]
 
     if (hasVoted.includes(user.uid)) {
-      //Obtener y sumar votos
       totalVotes = votes - 1
       usersHaveVoted = usersHaveVoted.filter(uid => uid !== user.uid)
     } else {
@@ -376,13 +350,11 @@ const Product = () => {
       usersHaveVoted = [...usersHaveVoted, user.uid]
     }
 
-    //Actualizar BD
     firebase.db
       .collection("products")
       .doc(id)
       .update({ votes: totalVotes, hasVoted: usersHaveVoted })
 
-    //Actualizar State
     setProduct({
       ...product,
       votes: totalVotes,
@@ -391,7 +363,6 @@ const Product = () => {
     setQueryDB(true)
   }
 
-  //Identificar la autoria del comentario
   const isCreator = id => {
     if (creator.id === id) {
       return true
@@ -425,138 +396,133 @@ const Product = () => {
     setQueryDB(true)
   }
 
-  //Funcion para revisar los privilegios
-  const hasPermits = () => {
-    if (!user) return false
-    if (creator.id === user.uid) return true
-  }
-
-  //Funcion para eliminar productos
-  const deleteProduct = async () => {
-    try {
-      if (!user) return router.push("/login")
-      if (creator.id !== user.uid) return router.push("/login")
-
-      await firebase.db.collection("products").doc(id).delete()
-      router.push("/")
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  if (error)
-    return <NotFound text="The product you are looking for doesn't exist" />
-
   return (
     <Layout>
-      {loading && <ProductSkeleton />}
-      {!loading && !error && (
-        <Article>
-          <ImageAndPosition>
-            <ImageContainer>
-              {(imageloading || imageError) && <ImagePlaceholder />}
-              {!imageError && (
-                <Image
-                  style={imageloading ? { display: "none" } : {}}
-                  src={imageurl}
-                  alt={name + " logo"}
-                  onLoad={handleImageLoaded}
-                  onError={handleImageError}
-                />
-              )}
-            </ImageContainer>
-            <Position>New</Position>
-          </ImageAndPosition>
+      <Article>
+        <ImageAndPosition>
+          <ImageContainer>
+            {(imageloading || imageError) && <ImagePlaceholder />}
+            {!imageError && (
+              <Image
+                style={imageloading ? { display: "none" } : {}}
+                src={imageurl}
+                alt={name + " logo"}
+                onLoad={handleImageLoaded}
+                onError={handleImageError}
+              />
+            )}
+          </ImageContainer>
+          <Position>New</Position>
+        </ImageAndPosition>
 
-          <TitleSubtitleAndLinks>
-            <TitleAndSubtitle>
-              <Title>{name}</Title>
-              <Subtitle>{subtitle || description}</Subtitle>
-            </TitleAndSubtitle>
-            <Links>
-              <Visit target="_blank" bgColor="true" href={url}>
-                Visit
-              </Visit>
-              <Upvote
-                onClick={handleVote}
-                upvoted={hasVoted.includes(user?.uid)}
-              >
-                <UpvoteIcon upvoted={hasVoted.includes(user?.uid)} />
-                {hasVoted.includes(user?.uid) ? "Upvoted" : "Upvote"} {votes}
-              </Upvote>
-            </Links>
-          </TitleSubtitleAndLinks>
-          <ProductContainer>
-            <Description>{description}</Description>
-            <Launched>
-              Launched in{" "}
-              {tags.map(tag => (
-                <Link href={`/category/${tag}`}>
-                  <Category>{tag} </Category>
-                </Link>
-              ))}{" "}
-              by {company}
-            </Launched>
-            <div>
-              {user && (
-                <Form onSubmit={onSubmit}>
-                  <UserIconContainer>
-                    <UserIcon />
-                  </UserIconContainer>
-                  <TextArea
-                    placeholder="What do you think?"
-                    height={height}
-                    value={comment}
-                    onChange={handleChange}
-                  />
-                  <SubmitContainer>
-                    {comment.trim().length > 0 &&
-                      comment.trim().length <= 150 && (
-                        <Help>
-                          {comment.trim().length < 80 &&
-                            "🧐 Makers appreciate thoughtful comments"}
-                          {comment.trim().length >= 80 && "🙂 Keep going..."}
-                        </Help>
-                      )}
-                    <Submit type="submit">Comment</Submit>
-                  </SubmitContainer>
-                </Form>
+        <TitleSubtitleAndLinks>
+          <TitleAndSubtitle>
+            <Title>{name}</Title>
+            <Subtitle>{subtitle || description}</Subtitle>
+          </TitleAndSubtitle>
+          <Links>
+            <Visit target="_blank" bgColor="true" href={url}>
+              Visit
+            </Visit>
+            <Upvote onClick={handleVote} upvoted={hasVoted.includes(user?.uid)}>
+              <UpvoteIcon upvoted={hasVoted.includes(user?.uid)} />
+              {hasVoted.includes(user?.uid) ? "Upvoted" : "Upvote"} {votes}
+            </Upvote>
+          </Links>
+        </TitleSubtitleAndLinks>
+        <ProductContainer>
+          <Description>{description}</Description>
+          <Launched>
+            Launched in{" "}
+            {tags.map(tag => (
+              <Link key={tag} href={`/category/${tag}`} legacyBehavior>
+                <Category>{tag} </Category>
+              </Link>
+            ))}{" "}
+            by {company}
+          </Launched>
+          <div>
+            {user && (
+              <Form onSubmit={onSubmit}>
+                <UserIconContainer>
+                  <UserIcon />
+                </UserIconContainer>
+                <TextArea
+                  placeholder="What do you think?"
+                  height={height}
+                  value={comment}
+                  onChange={handleChange}
+                />
+                <SubmitContainer>
+                  {comment.trim().length > 0 &&
+                    comment.trim().length <= 150 && (
+                      <Help>
+                        {comment.trim().length < 80 &&
+                          "🧐 Makers appreciate thoughtful comments"}
+                        {comment.trim().length >= 80 && "🙂 Keep going..."}
+                      </Help>
+                    )}
+                  <Submit type="submit">Comment</Submit>
+                </SubmitContainer>
+              </Form>
+            )}
+            <Comments>
+              {comments.length > 0 && (
+                <CommentsList>
+                  {comments.map((comment, i) => (
+                    <li key={`${comment.userId}-${i}`}>
+                      <CommentUserContainer>
+                        <UserIconContainer>
+                          <UserIcon />
+                        </UserIconContainer>
+                        <CommentUser>{comment.userName}</CommentUser>
+                        <CommentUsername>
+                          @{comment.userName.toLowerCase().replace(" ", "")}
+                        </CommentUsername>
+                        {isCreator(comment.userId) && (
+                          <ProductOwner>Maker</ProductOwner>
+                        )}
+                      </CommentUserContainer>
+                      <p>{comment.msg}</p>
+                    </li>
+                  ))}
+                </CommentsList>
               )}
-              <Comments>
-                {comments.length > 0 && (
-                  <CommentsList>
-                    {comments.map((comment, i) => (
-                      <li key={`${comment.userId}-${i}`}>
-                        <CommentUserContainer>
-                          <UserIconContainer>
-                            <UserIcon />
-                          </UserIconContainer>
-                          <CommentUser>{comment.userName}</CommentUser>
-                          <CommentUsername>
-                            @{comment.userName.toLowerCase().replace(" ", "")}
-                          </CommentUsername>
-                          {isCreator(comment.userId) && (
-                            <ProductOwner>Maker</ProductOwner>
-                          )}
-                        </CommentUserContainer>
-                        <p>{comment.msg}</p>
-                      </li>
-                    ))}
-                  </CommentsList>
-                )}
-              </Comments>
-            </div>
-            <LaunchTitle>About this launch</LaunchTitle>
-            <LaunchSummary>
-              {name} was hunted by {company} in{" "}
-              {tags.map(s => s[0].toUpperCase() + s.slice(1)).join(", ")}. Made
-              by {creator.name}. Posted on {formatDate(date)}.
-            </LaunchSummary>
-          </ProductContainer>
-        </Article>
-      )}
+            </Comments>
+          </div>
+          <LaunchTitle>About this launch</LaunchTitle>
+          <LaunchSummary>
+            {name} was hunted by {company} in{" "}
+            {tags.map(s => (
+              <span key={s}>s[0].toUpperCase() + s.slice(1).join(", ")</span>
+            ))}
+            . Made by {creator.name}. Posted on {formatDate(date)}.
+          </LaunchSummary>
+        </ProductContainer>
+      </Article>
     </Layout>
-  )
+  );
 }
 
-export default Product
+export async function getServerSideProps(context) {
+  const {
+    params: { slug },
+  } = context
+
+  try {
+    const product = await getPostBySlug(slug)
+
+    return {
+      props: {
+        product,
+      },
+    }
+  } catch (error) {
+    console.error(error)
+    return {
+      props: {
+        notFound: true,
+      },
+    }
+  }
+}
