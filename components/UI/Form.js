@@ -5,7 +5,7 @@ export const Form = styled.form`
   margin: 1rem auto 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: .5rem;
 `
 
 export const Field = styled.div`
@@ -15,7 +15,7 @@ export const Field = styled.div`
   align-items: flex-start;
 
   label {
-    margin: 0 0.7rem 1rem 0;
+    margin: 7px 0;
     font-size: 1rem;
   }
 

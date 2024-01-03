@@ -7,6 +7,7 @@ import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import FirebaseContext from "../../firebase/context"
 import UserIcon from "@components/UI/UserIcon"
+import { useRouter } from "next/router"
 
 const HeaderContainer = styled.header`
   border-bottom: 1px solid var(--light-gray);
@@ -63,8 +64,14 @@ const UserIconContainer = styled.div`
   }
 `
 
+const AUTH_PAGES = ["signin", "signup"]
+
 const Header = () => {
   const { user } = useContext(FirebaseContext)
+
+  const { pathname } = useRouter()
+  const parsedPathname = pathname.slice(1)
+
 
   return (
     <HeaderContainer>
@@ -98,9 +105,14 @@ const Header = () => {
             </UserIconContainer>
           </Link>
         )}
-        {!user && (
-          <Link href="/login" legacyBehavior>
+        {!user && !AUTH_PAGES.includes(parsedPathname) && (
+          <Link href="/signin" legacyBehavior>
             <Button>Sign in</Button>
+          </Link>
+        )}
+        {!user && AUTH_PAGES.includes(parsedPathname) && (
+          <Link href="/" legacyBehavior>
+            <Button>Go back</Button>
           </Link>
         )}
       </div>

@@ -14,7 +14,7 @@ export async function getPostBySlug(slug) {
 
   if (docs.length > 0) {
     return docs[0]
-  } else {
-    throw new Error("Post not found")
   }
+
+  throw new Error("Post not found")
 }
