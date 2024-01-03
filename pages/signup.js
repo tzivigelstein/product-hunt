@@ -1,10 +1,11 @@
-import { Fragment, useState } from "react"
+import { useState } from "react"
+import { useRouter } from "next/router"
+import { css } from "@emotion/core"
+
 import Layout from "../components/Layout/Layout"
 import useValidation from "../hooks/useValidation"
 import signupValidation from "../validation/signupValidation"
-import Router from "next/router"
 import { Form, Field, InputSubmit, Error } from "../components/UI/Form"
-import { css } from "@emotion/core"
 import firebase from "../firebase/index"
 
 const initialState = {
@@ -20,13 +21,14 @@ const Signup = () => {
     useValidation(initialState, signupValidation, signUp)
 
   const { name, password, email } = values
+  const router = useRouter()
 
   async function signUp() {
     try {
       await firebase.signup(name, email, password)
-      Router.push("/")
+      router.push("/")
     } catch (error) {
-      console.error("Hubo un error al crear el usuario", error.message)
+      console.error("Oops! This one is on us. There was an error when creating your account.", error.message)
       setError(error.message)
     }
   }
@@ -34,60 +36,60 @@ const Signup = () => {
   return (
     <div>
       <Layout>
-        <>
-          <h1
-            css={css`
+        <h1
+          css={css`
               text-align: center;
-              margin-top: 5rem;
+              margin-top: 2rem;
             `}
-          >
-            Crear cuenta
-          </h1>
-          <Form onSubmit={handleSubmit} noValidate>
-            <Field>
-              <label htmlFor="name">Nombre</label>
-              <input
-                type="text"
-                id="name"
-                placeholder="Nombre"
-                name="name"
-                value={name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Field>
-            {errors.name && <Error>{errors.name}</Error>}
-            <Field>
-              <label htmlFor="name">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Email"
-                value={email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Field>
-            {errors.email && <Error>{errors.email}</Error>}
-            <Field>
-              <label htmlFor="name">Contraseña</label>
-              <input
-                type="password"
-                id="password"
-                placeholder="Contraseña"
-                name="password"
-                value={password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-            </Field>
-            {errors.password && <Error>{errors.password}</Error>}
-            {error && <Error>{error}</Error>}
-
-            <InputSubmit type="submit" value="Crear cuenta" />
-          </Form>
-        </>
+        >
+          Create account
+        </h1>
+        <Form onSubmit={handleSubmit} noValidate>
+          <Field>
+            <label htmlFor="name">Name</label>
+            <input
+              data-error={errors.name !== undefined}
+              type="text"
+              id="name"
+              placeholder="Aria Evergreen"
+              name="name"
+              value={name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            <Error>{errors.name}</Error>
+          </Field>
+          <Field>
+            <label htmlFor="name">Email</label>
+            <input
+              data-error={errors.email !== undefined}
+              type="email"
+              id="email"
+              name="email"
+              placeholder="aria.evergreen@exaple.com"
+              value={email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            <Error>{errors.email}</Error>
+          </Field>
+          <Field>
+            <label htmlFor="name">Password</label>
+            <input
+              data-error={errors.password !== undefined}
+              type="password"
+              id="password"
+              placeholder="Password"
+              name="password"
+              value={password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            <Error>{errors.password}</Error>
+          </Field>
+          {error && <Error>{error}</Error>}
+          <InputSubmit type="submit" value="Create account" />
+        </Form>
       </Layout>
     </div>
   )

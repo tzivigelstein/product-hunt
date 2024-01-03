@@ -17,6 +17,15 @@ const useValidation = (initialState, validate, fn) => {
 
   //Funcion que se ejecuta conforme el usuario escribe en el form
   const handleChange = e => {
+    // Keep the all the fields errors but the one its changing
+    setErrors(prev => {
+      const previousErrorsWithoutCurrentField = Object.entries(prev).filter(([name]) => name !== e.target.name)
+      return previousErrorsWithoutCurrentField.reduce((acc, [key, value]) => ({
+        ...acc,
+        [key]: value
+      }), {})
+    })
+
     setValues({
       ...values,
       [e.target.name]: e.target.value,
