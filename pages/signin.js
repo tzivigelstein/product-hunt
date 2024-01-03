@@ -1,36 +1,35 @@
 import { useState } from "react"
-import { useRouter } from "next/router"
-import Link from 'next/link'
-import { css } from "@emotion/core"
-
 import Layout from "../components/Layout/Layout"
 import useValidation from "../hooks/useValidation"
-import signupValidation from "../validation/signupValidation"
-import { Form, Field, InputSubmit, Error } from "../components/UI/Form"
+import loginValidation from "../validation/loginValidation"
+import { useRouter } from "next/router"
+import Link from 'next/link'
+import { Form, Field, InputSubmit, Error } from "@components/UI/Form"
+import { css } from "@emotion/core"
 import firebase from "../firebase/index"
 
 const initialState = {
-  name: "",
   password: "",
   email: "",
 }
 
-const Signup = () => {
+const Login = () => {
   const [error, setError] = useState("")
 
   const { values, errors, handleSubmit, handleChange, handleBlur } =
-    useValidation(initialState, signupValidation, signUp)
+    useValidation(initialState, loginValidation, logIn)
 
-  const { name, password, email } = values
+  const { password, email } = values
+
   const router = useRouter()
 
-  async function signUp() {
+  async function logIn() {
     try {
-      await firebase.signup(name, email, password)
+      await firebase.login(email, password)
       router.push("/")
     } catch (error) {
       console.error(error.message)
-      setError("Oops! This one is on us. There was an error when creating your account.")
+      setError("Oops! This one is on us. There was an error when authenticating.")
     }
   }
 
@@ -44,23 +43,9 @@ const Signup = () => {
               margin-bottom: 0;
             `}
           >
-            Signup
+            Signin
           </h1>
           <Error>{error}</Error>
-          <Field>
-            <label htmlFor="name">Name</label>
-            <input
-              data-error={errors.name !== undefined}
-              type="text"
-              id="name"
-              placeholder="Aria Evergreen"
-              name="name"
-              value={name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-            <Error>{errors.name}</Error>
-          </Field>
           <Field>
             <label htmlFor="name">Email</label>
             <input
@@ -89,15 +74,15 @@ const Signup = () => {
             />
             <Error>{errors.password}</Error>
           </Field>
-          <InputSubmit type="submit" value="Signup" />
+          <InputSubmit type="submit" value="Signin" />
           <Link
             css={css`
             color: var(--orange);
             text-align: center;
             margin-top: 5px;
             `}
-            href="/signin">
-            Already have an account? Signin
+            href="/signup">
+            Don't have an account? Signup
           </Link>
         </Form>
       </Layout>
@@ -105,4 +90,4 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default Login

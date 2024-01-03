@@ -2,10 +2,10 @@ import styled from "@emotion/styled"
 
 export const Form = styled.form`
   max-width: 500px;
-  margin: 5rem auto 5rem auto;
+  margin: 1rem auto 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: .5rem;
 `
 
 export const Field = styled.div`
@@ -15,7 +15,7 @@ export const Field = styled.div`
   align-items: flex-start;
 
   label {
-    margin: 0 0.7rem 1rem 0;
+    margin: 7px 0;
     font-size: 1rem;
   }
 
@@ -24,6 +24,11 @@ export const Field = styled.div`
     width: 100%;
     padding: 1rem;
     box-sizing: border-box;
+  }
+
+  input[data-error='true']{
+    outline: 2px solid red;
+    border: 1px solid transparent;
   }
 
   textarea {
@@ -49,12 +54,8 @@ export const InputSubmit = styled.input`
 `
 
 export const Error = styled.p`
-  background-color: #f53a29;
-  padding: 1rem;
-  font-weight: 700;
-  font-size: 1rem;
-  color: #fff;
-  text-align: center;
-  text-transform: uppercase;
-  margin: 2rem 0;
+  color: #f53a29;
+  height: 1rem;
+  padding: 0;
+  font-size: 14px;
 `
