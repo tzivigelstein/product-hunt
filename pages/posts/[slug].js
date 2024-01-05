@@ -5,11 +5,10 @@ import Link from "next/link"
 
 import { FirebaseContext } from "../../firebase/index"
 
-import NotFound from "@components/Layout/404"
 import Layout from "@components/Layout/Layout"
 import UserIcon from "@components/UI/UserIcon"
+import BackIcon from '@components/UI/BackIcon'
 import formatDate from "@utils/formatDate"
-import ProductSkeleton from "../../components/Layout/Product/Skeleton"
 import { getPostBySlug } from "../../firebase/utils"
 
 const ProductContainer = styled.div``
@@ -19,6 +18,19 @@ const Article = styled.article`
   max-width: 900px;
   margin: 0 auto;
   padding-bottom: 500px;
+`
+
+const GoBackLink = styled(Link)`
+  color: #4b587c;
+  display: flex;
+  padding: 2rem 2rem 2rem 0;
+  width: max-content;
+  align-items: center;
+  gap: 5px;
+
+  svg {
+    width: 18px;
+  }
 `
 
 const ImageAndPosition = styled.div`
@@ -128,9 +140,9 @@ const UpvoteIcon = styled.div`
   transition: 800ms steps(28) background-position;
   filter: brightness(0) saturate(100%)
     ${props =>
-      props.upvoted
-        ? "filter: invert(70%) sepia(54%) saturate(5290%) hue-rotate(323deg) brightness(95%) contrast(113%)"
-        : "invert(100%) sepia(0%) saturate(1190%) hue-rotate(197deg) brightness(119%) contrast(100%)"};
+    props.upvoted
+      ? "filter: invert(70%) sepia(54%) saturate(5290%) hue-rotate(323deg) brightness(95%) contrast(113%)"
+      : "invert(100%) sepia(0%) saturate(1190%) hue-rotate(197deg) brightness(119%) contrast(100%)"};
   gap: 1ch;
 `
 
@@ -244,6 +256,11 @@ const CommentUserContainer = styled.div`
   align-items: center;
 `
 
+const CommentMessage = styled.p`
+  width: 100%;
+  word-break: break-all;
+`
+
 const CommentUser = styled.span`
   font-weight: 600;
   font-size: 14px;
@@ -286,12 +303,13 @@ const LaunchSummary = styled.p`
 `
 
 export default function Product({ product }) {
+  const [localProduct, setLocalProduct] = useState(null)
   const [minHeight] = useState(64)
   const [maxHeight] = useState(200)
   const [height, setHeight] = useState(minHeight)
 
   const [comment, setComment] = useState("")
-  const [queryDB, setQueryDB] = useState(true)
+  const [_, setQueryDB] = useState(true)
 
   const [imageError, setImageError] = useState(false)
   const [imageloading, setImageLoading] = useState(true)
@@ -322,6 +340,7 @@ export default function Product({ product }) {
   const router = useRouter()
 
   const {
+    id,
     name,
     subtitle,
     description,
@@ -334,7 +353,7 @@ export default function Product({ product }) {
     hasVoted,
     tags,
     date,
-  } = product
+  } = localProduct ? localProduct : product
 
   const handleVote = () => {
     if (!user) return router.push("/login")
@@ -355,7 +374,7 @@ export default function Product({ product }) {
       .doc(id)
       .update({ votes: totalVotes, hasVoted: usersHaveVoted })
 
-    setProduct({
+    setLocalProduct({
       ...product,
       votes: totalVotes,
     })
@@ -386,12 +405,13 @@ export default function Product({ product }) {
 
     firebase.db.collection("products").doc(id).update({ comments: newComments })
 
-    setProduct({
+    setLocalProduct({
       ...product,
       comments: newComments,
     })
 
     setComment("")
+    setHeight(minHeight)
 
     setQueryDB(true)
   }
@@ -399,6 +419,9 @@ export default function Product({ product }) {
   return (
     <Layout>
       <Article>
+        <GoBackLink href="/">
+          <BackIcon /> Go back
+        </GoBackLink>
         <ImageAndPosition>
           <ImageContainer>
             {(imageloading || imageError) && <ImagePlaceholder />}
@@ -483,7 +506,7 @@ export default function Product({ product }) {
                           <ProductOwner>Maker</ProductOwner>
                         )}
                       </CommentUserContainer>
-                      <p>{comment.msg}</p>
+                      <CommentMessage>{comment.msg}</CommentMessage>
                     </li>
                   ))}
                 </CommentsList>
@@ -493,8 +516,8 @@ export default function Product({ product }) {
           <LaunchTitle>About this launch</LaunchTitle>
           <LaunchSummary>
             {name} was hunted by {company} in{" "}
-            {tags.map(s => (
-              <span key={s}>s[0].toUpperCase() + s.slice(1).join(", ")</span>
+            {tags.map((s, i) => (
+              <span key={s}>{s[0].toUpperCase() + s.slice(1) + (i < tags.length - 1 ? ", " : "")}</span>
             ))}
             . Made by {creator.name}. Posted on {formatDate(date)}.
           </LaunchSummary>
