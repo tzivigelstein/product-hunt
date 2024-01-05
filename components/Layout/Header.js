@@ -15,9 +15,6 @@ const HeaderContainer = styled.header`
   background-color: #fff;
   display: flex;
   justify-content: space-between;
-  position: sticky;
-  top: 0;
-  left: 0;
   z-index: 999;
 
   @media (max-width: 760px) {
