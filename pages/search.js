@@ -3,6 +3,7 @@ import Layout from "@components/Layout/Layout"
 import { useRouter } from "next/router"
 import useOrder from "@hooks/useOrder"
 import ProductDetail from "@components/Layout/ProductDetail"
+import Link from "next/link"
 
 const SearchPage = () => {
   const router = useRouter()
@@ -36,9 +37,15 @@ const SearchPage = () => {
       <div className="wrapper">
         <div className="container">
           <ul className="product_list">
-            {searchProducts.map(searchProduct => (
+            {searchProducts.length > 0 && searchProducts.map(searchProduct => (
               <ProductDetail key={searchProduct.id} product={searchProduct} />
             ))}
+            {searchProducts.length === 0 && (
+              <>
+                <p>No product results for "{q}"</p>
+                <p>Try searching for <Link className="exampleSearchLink" href={'/search?q=wordle'}>wordle</Link></p>
+              </>
+            )}
           </ul>
         </div>
       </div>
