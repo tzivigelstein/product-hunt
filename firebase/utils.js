@@ -9,7 +9,7 @@ export async function getPostBySlug(slug) {
   const docs = []
 
   query.forEach(doc => {
-    docs.push(doc.data())
+    docs.push({ ...doc.data(), id: doc.id })
   })
 
   if (docs.length > 0) {
