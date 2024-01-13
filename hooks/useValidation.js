@@ -7,10 +7,12 @@ const useValidation = (initialState, validate, fn) => {
 
   useEffect(() => {
     if (submit) {
-      const isError = Object.keys(errors).length === 0
-      if (isError) {
+      const isNotError = Object.keys(errors).length === 0
+
+      if (isNotError) {
         fn()
       }
+
       setSubmit(false)
     }
   }, [errors])
